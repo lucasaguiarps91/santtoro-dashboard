@@ -1,13 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santtoro — 2026 Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --bg-primary: #ffffff; --bg-secondary: #f5f5f3; --bg-tertiary: #eeece8; --text-primary: #1a1a1a; --text-secondary: #666660; --text-tertiary: #999993; --border: rgba(0,0,0,0.10); --border-strong: rgba(0,0,0,0.18); --radius-md: 8px; --radius-lg: 12px; }
+  @media (prefers-color-scheme: dark) { :root { --bg-primary: #1c1c1a; --bg-secondary: #252523; --bg-tertiary: #2e2e2b; --text-primary: #f0efe9; --text-secondary: #9a9991; --text-tertiary: #666660; --border: rgba(255,255,255,0.10); --border-strong: rgba(255,255,255,0.18); } }
+  body { font-family: 'Georgia', serif; background: var(--bg-tertiary); color: var(--text-primary); min-height: 100vh; padding: 2rem; }
+  .page-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-strong); }
+  .page-title { font-size: 28px; font-weight: normal; letter-spacing: -0.5px; }
+  .page-subtitle { font-size: 13px; color: var(--text-tertiary); font-family: 'Courier New', monospace; }
+  .section-label { font-size: 10px; font-weight: bold; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-tertiary); font-family: 'Courier New', monospace; margin-bottom: 10px; }
+  .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .metric { background: var(--bg-primary); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; }
+  .metric-label { font-size: 11px; color: var(--text-tertiary); font-family: 'Courier New', monospace; margin-bottom: 6px; }
+  .metric-value { font-size: 24px; font-weight: normal; color: var(--text-primary); }
+  .metric-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 3px; font-family: 'Courier New', monospace; }
+  .progress-section { margin-bottom: 1.5rem; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 5px; font-family: 'Courier New', monospace; }
+  .progress-bar-wrap { height: 6px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: #378ADD; border-radius: 4px; }
+  .progress-note { font-size: 11px; color: var(--text-tertiary); margin-top: 5px; font-family: 'Courier New', monospace; }
+  .row2 { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 14px; margin-bottom: 1.5rem; }
+  .card { background: var(--bg-primary); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; }
+  .deal-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--border); }
+  .deal-row:last-child { border-bottom: none; }
+  .temp-badge { font-size: 10px; font-weight: bold; padding: 2px 8px; border-radius: 20px; white-space: nowrap; font-family: 'Courier New', monospace; }
+  .hot { background: #FCEBEB; color: #A32D2D; } .warm { background: #FAEEDA; color: #854F0B; } .cold { background: #E6F1FB; color: #185FA5; }
+  .deal-name { font-size: 13px; color: var(--text-primary); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .deal-stage { font-size: 11px; color: var(--text-tertiary); white-space: nowrap; font-family: 'Courier New', monospace; }
+  .deal-val { font-size: 13px; color: var(--text-primary); white-space: nowrap; font-family: 'Courier New', monospace; }
+  .col-right { display: flex; flex-direction: column; gap: 14px; }
+  .row3 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .finance-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+  .finance-row:last-child { border-bottom: none; }
+  .finance-label { color: var(--text-secondary); }
+  .finance-val { font-family: 'Courier New', monospace; font-size: 12px; color: var(--text-primary); }
+  .finance-val.green { color: #3B6D11; } .finance-val.amber { color: #854F0B; } .finance-val.red { color: #A32D2D; }
+  .alert-box { margin-top: 10px; padding: 10px 12px; background: #FAEEDA; border-radius: var(--radius-md); }
+  .alert-title { font-size: 12px; color: #854F0B; font-weight: bold; font-family: 'Courier New', monospace; margin-bottom: 3px; }
+  .alert-body { font-size: 12px; color: #854F0B; font-family: 'Courier New', monospace; }
+  .chart-wrap { position: relative; width: 100%; height: 200px; }
+  @media (max-width: 700px) { .metric-grid { grid-template-columns: repeat(2, 1fr); } .row2, .row3 { grid-template-columns: 1fr; } }
+</style>
 </head>
 <body>
-    <h1>Welcome to the Dashboard</h1>
-    <p>Current Date and Time: 2026-04-04 07:20:18</p>
-    <!-- Add your dashboard content here -->
+<div class="page-header">
+  <div><div class="page-title">Santtoro</div><div style="font-size:13px;color:var(--text-secondary);margin-top:2px;">2026 Business Overview — Leadership Report</div></div>
+  <div class="page-subtitle">Generated April 2026</div>
+</div>
+<div class="section-label">Key metrics</div>
+<div class="metric-grid">
+  <div class="metric"><div class="metric-label">Total pipeline</div><div class="metric-value">$1.64M</div><div class="metric-sub">25 active deals</div></div>
+  <div class="metric"><div class="metric-label">Closed revenue</div><div class="metric-value">$361K</div><div class="metric-sub">7 deals closed</div></div>
+  <div class="metric"><div class="metric-label">2026 revenue goal</div><div class="metric-value">$3.0M</div><div class="metric-sub">12% to target</div></div>
+  <div class="metric"><div class="metric-label">Est. net profit</div><div class="metric-value">$350–400K</div><div class="metric-sub">at $2.5M revenue</div></div>
+</div>
+<div class="progress-section">
+  <div class="section-label">Revenue to goal</div>
+  <div class="progress-meta"><span>Closed: $361K</span><span>Goal: $3.0M</span></div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:12%;"></div></div>
+  <div class="progress-note">Hot pipeline could add $768K — closing all HOT deals = ~$1.13M (38% of goal)</div>
+</div>
+<div class="row2">
+  <div class="card">
+    <div class="section-label">Active pipeline — HOT &amp; warm deals</div>
+    <div class="deal-row"><span class="temp-badge hot">HOT</span><span class="deal-name">Megan Donovan — Westport</span><span class="deal-stage">In negotiation</span><span class="deal-val">$120K</span></div>
+    <div class="deal-row"><span class="temp-badge hot">HOT</span><span class="deal-name">IBP Orlando Florida Residence</span><span class="deal-stage">In negotiation</span><span class="deal-val">$150K</span></div>
+    <div class="deal-row"><span class="temp-badge hot">HOT</span><span class="deal-name">Elevated Roots — Halifax</span><span class="deal-stage">In negotiation</span><span class="deal-val">$143K</span></div>
+    <div class="deal-row"><span class="temp-badge hot">HOT</span><span class="deal-name">Elevated Roots — Kingston</span><span class="deal-stage">In negotiation</span><span class="deal-val">$140K</span></div>
+    <div class="deal-row"><span class="temp-badge hot">HOT</span><span class="deal-name">Sheyvston (Victor) — Lexington</span><span class="deal-stage">In negotiation</span><span class="deal-val">$15K</span></div>
+    <div class="deal-row"><span class="temp-badge warm">WARM</span><span class="deal-name">Sonny Iannacone — Exeter NH</span><span class="deal-stage">In negotiation</span><span class="deal-val">$185K</span></div>
+    <div class="deal-row"><span class="temp-badge warm">WARM</span><span class="deal-name">Nilesh &amp; Dipal — Milton</span><span class="deal-stage">In negotiation</span><span class="deal-val">$160K</span></div>
+    <div class="deal-row"><span class="temp-badge warm">WARM</span><span class="deal-name">Alfa Group — 330 Chief Justice</span><span class="deal-stage">In negotiation</span><span class="deal-val">$60K</span></div>
+    <div class="deal-row"><span class="temp-badge warm">WARM</span><span class="deal-name">Alfa Group — 0 Wood Ave</span><span class="deal-stage">In negotiation</span><span class="deal-val">$40K</span></div>
+    <div class="deal-row"><span class="temp-badge warm">WARM</span><span class="deal-name">Chris Kostopoulos — Newton</span><span class="deal-stage">New deal</span><span class="deal-val">$80K</span></div>
+  </div>
+  <div class="col-right">
+    <div class="card"><div class="section-label">Pipeline by temperature</div><div class="chart-wrap"><canvas id="tempChart"></canvas></div></div>
+    <div class="card">
+      <div class="section-label">Closed deals (2026)</div>
+      <div class="deal-row"><span class="deal-name">Matthew Arnold — ADUs</span><span class="deal-val">$40K</span></div>
+      <div class="deal-row"><span class="deal-name">Bertola — 488 Columbus</span><span class="deal-val">$94K</span></div>
+      <div class="deal-row"><span class="deal-name">Sharona Taieb — Brookline</span><span class="deal-val">$144K</span></div>
+      <div class="deal-row"><span class="deal-name">Bertola — Lexington</span><span class="deal-val">$73K</span></div>
+      <div class="deal-row"><span class="deal-name">Lisa Wexler — Dedham</span><span class="deal-val">$24K</span></div>
+      <div class="deal-row"><span class="deal-name">Robert &amp; Elizabeth</span><span class="deal-val">$25K</span></div>
+      <div class="deal-row"><span class="deal-name">NESFA Spray Foam</span><span class="deal-val">$1.7K</span></div>
+    </div>
+  </div>
+</div>
+<div class="row3">
+  <div class="card">
+    <div class="section-label">Financial snapshot</div>
+    <div class="finance-row"><span class="finance-label">Gross margin</span><span class="finance-val">38%</span></div>
+    <div class="finance-row"><span class="finance-label">Monthly overhead</span><span class="finance-val amber">$45–50K</span></div>
+    <div class="finance-row"><span class="finance-label">Annual overhead</span><span class="finance-val amber">~$570K</span></div>
+    <div class="finance-row"><span class="finance-label">Breakeven revenue</span><span class="finance-val">~$1.5M/yr</span></div>
+    <div class="finance-row"><span class="finance-label">Est. net @ $2.5M</span><span class="finance-val green">$350–400K</span></div>
+    <div class="finance-row"><span class="finance-label">Est. net @ $3.0M target</span><span class="finance-val green">~$570K</span></div>
+  </div>
+  <div class="card">
+    <div class="section-label">Marketing budget analysis</div>
+    <div class="finance-row"><span class="finance-label">Recommended budget (6%)</span><span class="finance-val">$180K/yr</span></div>
+    <div class="finance-row"><span class="finance-label">NE Home Magazine</span><span class="finance-val red">$46.8K/yr</span></div>
+    <div class="finance-row"><span class="finance-label">Marketing agency</span><span class="finance-val red">$48K/yr</span></div>
+    <div class="finance-row"><span class="finance-label">Total committed</span><span class="finance-val red">$94.8K/yr</span></div>
+    <div class="finance-row"><span class="finance-label">Left for Google/Meta Ads</span><span class="finance-val amber">~$85K/yr</span></div>
+    <div class="finance-row"><span class="finance-label">Closings from magazine</span><span class="finance-val red">$0</span></div>
+    <div class="alert-box"><div class="alert-title">Recommendation</div><div class="alert-body">Redirecting magazine budget → Google Ads would nearly double paid digital spend (+$46.8K)</div></div>
+  </div>
+</div>
+<script>
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const textColor = isDark ? '#666660' : '#999993';
+  new Chart(document.getElementById('tempChart'), {
+    type: 'doughnut',
+    data: { labels: ['HOT ($768K)', 'Warm ($620K)', 'Cold ($612K)'], datasets: [{ data: [768000, 620000, 612000], backgroundColor: ['#E24B4A', '#EF9F27', '#378ADD'], borderWidth: 2, borderColor: isDark ? '#1c1c1a' : '#ffffff' }] },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { display: true, position: 'bottom', labels: { font: { size: 11 }, color: textColor, boxWidth: 10, padding: 8 } }, tooltip: { callbacks: { label: (ctx) => ' $' + (ctx.parsed / 1000).toFixed(0) + 'K' } } } }
+  });
+</script>
 </body>
 </html>
