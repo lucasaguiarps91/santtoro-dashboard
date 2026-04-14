@@ -1,0 +1,2288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santtoro 2026 — Growth Roadmap</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg-primary: #f5f3ef;
+    --bg-secondary: #ebe8e2;
+    --bg-card: #ffffff;
+    --bg-card-alt: #f0ede7;
+    --bg-dark: #1c1a17;
+    --text-primary: #1c1a17;
+    --text-secondary: #4a4540;
+    --text-muted: #7a7268;
+    --text-inverse: #f5f3ef;
+    --border: #d6d0c6;
+    --border-light: #e8e4dc;
+    --blue: #378ADD;
+    --blue-light: #d4e8f9;
+    --blue-dark: #245d9a;
+    --red: #E24B4A;
+    --red-light: #fce8e8;
+    --amber: #EF9F27;
+    --amber-light: #fdf0d8;
+    --green: #3B6D11;
+    --green-light: #dff0ce;
+    --accent-line: #d6d0c6;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.05);
+    --radius: 4px;
+    --radius-lg: 8px;
+    --font-serif: Georgia, 'Times New Roman', serif;
+    --font-mono: 'Courier New', Courier, monospace;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-primary: #141210;
+      --bg-secondary: #1c1a17;
+      --bg-card: #232018;
+      --bg-card-alt: #1a1814;
+      --bg-dark: #0e0d0b;
+      --text-primary: #e8e4dc;
+      --text-secondary: #b8b2a8;
+      --text-muted: #7a7268;
+      --text-inverse: #1c1a17;
+      --border: #3a3630;
+      --border-light: #2e2b26;
+      --blue-light: #1a2f47;
+      --red-light: #3d1515;
+      --amber-light: #3d2a08;
+      --green-light: #1a2e0a;
+      --accent-line: #3a3630;
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    font-size: 14px;
+  }
+
+  /* ========== HEADER ========== */
+  .header {
+    background: var(--bg-dark);
+    color: var(--text-inverse);
+    padding: 48px 40px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue), var(--amber), var(--red));
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .header-brand {
+    font-family: var(--font-serif);
+    font-size: 36px;
+    font-weight: normal;
+    letter-spacing: 0.02em;
+    color: #f5f3ef;
+  }
+  .header-brand span {
+    color: var(--amber);
+  }
+  .header-sub {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7a7268;
+    margin-top: 6px;
+  }
+  .header-meta {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #7a7268;
+    letter-spacing: 0.06em;
+  }
+  .header-meta .target {
+    font-size: 28px;
+    font-family: var(--font-serif);
+    color: var(--amber);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ========== LAYOUT ========== */
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  .section {
+    margin-bottom: 56px;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: normal;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ========== GRID SYSTEMS ========== */
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  @media (max-width: 900px) {
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .grid-2, .grid-4 { grid-template-columns: 1fr; }
+    .header { padding: 32px 20px 28px; }
+    .header-brand { font-size: 26px; }
+    .page { padding: 20px 16px 60px; }
+  }
+
+  /* ========== CARDS ========== */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .card-alt {
+    background: var(--bg-card-alt);
+  }
+
+  .card-title {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-weight: normal;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+  }
+
+  /* ========== PILLARS ========== */
+  .pillar {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .pillar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .pillar-1::before { background: var(--blue); }
+  .pillar-2::before { background: var(--amber); }
+  .pillar-3::before { background: var(--green); }
+
+  .pillar-number {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .pillar-title {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: normal;
+    margin-bottom: 12px;
+  }
+  .pillar-1 .pillar-title { color: var(--blue); }
+  .pillar-2 .pillar-title { color: var(--amber); }
+  .pillar-3 .pillar-title { color: var(--green); }
+
+  .pillar-owner {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 3px 8px;
+    display: inline-block;
+    margin-bottom: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .pillar-body {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .pillar-body li {
+    margin-left: 16px;
+    margin-bottom: 4px;
+  }
+
+  /* ========== QUARTER CARDS ========== */
+  .quarter-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .quarter-header {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .q2-header { background: var(--blue); color: white; }
+  .q3-header { background: var(--amber); color: white; }
+  .q4-header { background: var(--red); color: white; }
+
+  .quarter-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 4px;
+  }
+  .quarter-revenue {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    font-weight: normal;
+    line-height: 1;
+  }
+  .quarter-contracts {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    opacity: 0.85;
+    margin-top: 4px;
+  }
+  .quarter-body {
+    padding: 16px 20px;
+  }
+  .quarter-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 12px;
+  }
+  .quarter-stat:last-child { border-bottom: none; }
+  .quarter-stat-label {
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .quarter-stat-val {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text-primary);
+  }
+  .quarter-milestones {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light);
+  }
+  .quarter-milestones-title {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .milestone-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .milestone-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+  .dot-blue { background: var(--blue); }
+  .dot-amber { background: var(--amber); }
+  .dot-red { background: var(--red); }
+  .dot-green { background: var(--green); }
+
+  /* ========== MONTH CARDS ========== */
+  .months-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 900px) {
+    .months-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 580px) {
+    .months-grid { grid-template-columns: 1fr; }
+  }
+
+  .month-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .month-header {
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .month-name {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: normal;
+  }
+  .month-target {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: bold;
+  }
+  .month-qtr-badge {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 2px 7px;
+    border-radius: 2px;
+    margin-left: 8px;
+  }
+  .badge-q2 { background: var(--blue-light); color: var(--blue); }
+  .badge-q3 { background: var(--amber-light); color: #a06a0a; }
+  .badge-q4 { background: var(--red-light); color: var(--red); }
+
+  .month-body {
+    padding: 14px 16px;
+  }
+  .month-section {
+    margin-bottom: 12px;
+  }
+  .month-section:last-child { margin-bottom: 0; }
+  .month-section-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .label-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .month-section-content {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .month-section-content li {
+    margin-left: 14px;
+    margin-bottom: 3px;
+  }
+  .month-actions {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-light);
+  }
+  .action-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 7px;
+    border-radius: 2px;
+    margin: 2px 2px 2px 0;
+  }
+  .tag-blue { background: var(--blue-light); color: var(--blue-dark); }
+  .tag-amber { background: var(--amber-light); color: #8a5e00; }
+  .tag-green { background: var(--green-light); color: var(--green); }
+  .tag-red { background: var(--red-light); color: #9a2020; }
+
+  /* ========== TARGET LISTS ========== */
+  .target-group {
+    margin-bottom: 24px;
+  }
+  .target-group-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .target-group-title {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-weight: normal;
+    color: var(--text-primary);
+  }
+  .target-count {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+  .target-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .target-table th {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    text-align: left;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-secondary);
+  }
+  .target-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    vertical-align: top;
+  }
+  .target-table tr:last-child td { border-bottom: none; }
+  .target-table tr:hover td { background: var(--bg-secondary); }
+
+  .priority-badge {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    padding: 2px 6px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .priority-1 { background: var(--red-light); color: var(--red); }
+  .priority-2 { background: var(--amber-light); color: #8a5e00; }
+  .priority-3 { background: var(--blue-light); color: var(--blue-dark); }
+  .priority-hot { background: var(--red-light); color: var(--red); font-weight: bold; }
+  .priority-warm { background: var(--amber-light); color: #8a5e00; }
+  .priority-active { background: var(--green-light); color: var(--green); }
+
+  /* ========== PIPELINE ========== */
+  .pipeline-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--border-light);
+    align-items: center;
+  }
+  .pipeline-row:last-child { border-bottom: none; }
+  .pipeline-row.header-row {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+  }
+  .pipeline-cell {
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .pipeline-row.header-row .pipeline-cell {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    font-weight: normal;
+  }
+  .pipeline-name {
+    font-size: 13px;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .pipeline-amount {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text-primary);
+  }
+  .pipeline-total-row {
+    background: var(--bg-secondary);
+    border-top: 2px solid var(--border);
+  }
+  .pipeline-total-row .pipeline-cell {
+    font-weight: bold;
+    color: var(--text-primary);
+  }
+
+  @media (max-width: 700px) {
+    .pipeline-row {
+      grid-template-columns: 1fr 1fr;
+      padding: 6px 0;
+    }
+    .pipeline-cell:nth-child(3),
+    .pipeline-cell:nth-child(4) { display: none; }
+    .pipeline-row.header-row .pipeline-cell:nth-child(3),
+    .pipeline-row.header-row .pipeline-cell:nth-child(4) { display: none; }
+  }
+
+  /* ========== PLAYBOOK ========== */
+  .playbook-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+  .playbook-header {
+    background: var(--bg-dark);
+    color: var(--text-inverse);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .playbook-icon {
+    font-size: 16px;
+    width: 28px;
+    height: 28px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .playbook-title {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-weight: normal;
+  }
+  .playbook-body {
+    padding: 20px;
+  }
+  .step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .step:last-child { margin-bottom: 0; }
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+    background: var(--blue);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-content strong {
+    display: block;
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+  }
+  .step-content p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .pitch-box {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-family: var(--font-serif);
+    font-size: 13px;
+    color: var(--text-primary);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  .terms-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 600px) {
+    .terms-grid { grid-template-columns: 1fr; }
+  }
+  .term-item {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    text-align: center;
+  }
+  .term-pct {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--blue);
+    display: block;
+  }
+  .term-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .term-desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  /* ========== FINANCIALS BAR ========== */
+  .financials-bar {
+    background: var(--bg-dark);
+    border-radius: var(--radius-lg);
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 800px) {
+    .financials-bar { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 500px) {
+    .financials-bar { grid-template-columns: repeat(2, 1fr); }
+  }
+  .fin-item {}
+  .fin-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #5a5550;
+    margin-bottom: 6px;
+  }
+  .fin-value {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    color: #e8e4dc;
+    line-height: 1;
+  }
+  .fin-value.amber { color: var(--amber); }
+  .fin-value.green { color: #6dbf2f; }
+  .fin-value.red { color: var(--red); }
+  .fin-sub {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: #5a5550;
+    margin-top: 4px;
+  }
+
+  /* ========== CHART ========== */
+  .chart-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+  .chart-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  /* ========== DIVIDER ========== */
+  .section-divider {
+    height: 1px;
+    background: var(--border-light);
+    margin: 40px 0;
+  }
+
+  /* ========== NOTE BOX ========== */
+  .note-box {
+    background: var(--amber-light);
+    border: 1px solid #e8c878;
+    border-left: 3px solid var(--amber);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  .note-box strong {
+    color: var(--text-primary);
+  }
+
+  /* ========== INSIGHT CARDS ========== */
+  .insight-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 800px) {
+    .insight-row { grid-template-columns: repeat(2, 1fr); }
+  }
+  .insight-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    box-shadow: var(--shadow);
+  }
+  .insight-num {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    font-weight: normal;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .insight-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* ========== FOOTER ========== */
+  .footer {
+    background: var(--bg-dark);
+    color: #5a5550;
+    padding: 24px 40px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  /* ========== UTILITIES ========== */
+  .text-blue { color: var(--blue); }
+  .text-amber { color: var(--amber); }
+  .text-red { color: var(--red); }
+  .text-green { color: var(--green); }
+  .text-muted { color: var(--text-muted); }
+  .mono { font-family: var(--font-mono); }
+  .serif { font-family: var(--font-serif); }
+  .mt-8 { margin-top: 8px; }
+  .mt-12 { margin-top: 12px; }
+  .mt-16 { margin-top: 16px; }
+  .mb-8 { margin-bottom: 8px; }
+  .bold { font-weight: bold; }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 700px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+
+  /* ========== PROGRESS BAR ========== */
+  .progress-wrap {
+    height: 6px;
+    background: var(--bg-secondary);
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+  .fill-blue { background: var(--blue); }
+  .fill-amber { background: var(--amber); }
+  .fill-red { background: var(--red); }
+  .fill-green { background: var(--green); }
+
+  /* scroll anchor offset */
+  [id] { scroll-margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <div class="header-brand">Santtoro<span>.</span></div>
+      <div class="header-sub">2026 Growth Roadmap &nbsp;&#8212;&nbsp; 500 Harrison Ave, Boston SoWa</div>
+    </div>
+    <div class="header-meta">
+      <span class="target">$3.18M</span>
+      2026 SALES TARGET &nbsp;|&nbsp; ACCRUAL<br>
+      REBRANDED AUG 2025 &nbsp;|&nbsp; REBUILDING BUILDER NETWORK
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE ===== -->
+<div class="page">
+
+  <!-- FINANCIAL SNAPSHOT -->
+  <div class="section" id="financials">
+    <div class="section-label">Financial Snapshot</div>
+    <div class="section-title">2026 Targets at a Glance</div>
+
+    <div class="financials-bar">
+      <div class="fin-item">
+        <div class="fin-label">Sales Target</div>
+        <div class="fin-value amber">$3.18M</div>
+        <div class="fin-sub">Accrual basis</div>
+      </div>
+      <div class="fin-item">
+        <div class="fin-label">Cash Receipts</div>
+        <div class="fin-value">$3.55M</div>
+        <div class="fin-sub">Target inflows</div>
+      </div>
+      <div class="fin-item">
+        <div class="fin-label">Gross Margin</div>
+        <div class="fin-value green">40–42%</div>
+        <div class="fin-sub">Target range</div>
+      </div>
+      <div class="fin-item">
+        <div class="fin-label">Net Profit</div>
+        <div class="fin-value green">$643K</div>
+        <div class="fin-sub">20.2% margin</div>
+      </div>
+      <div class="fin-item">
+        <div class="fin-label">Min Cash</div>
+        <div class="fin-value red">-$33,880</div>
+        <div class="fin-sub">Cash is tight</div>
+      </div>
+    </div>
+
+    <div class="insight-row">
+      <div class="insight-card">
+        <div class="insight-num text-blue">$371K</div>
+        <div class="insight-label">Q1 Closed<br>6 projects / $61.8K avg</div>
+        <div class="progress-wrap"><div class="progress-fill fill-blue" style="width:12%"></div></div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-num text-amber">$1.0M</div>
+        <div class="insight-label">Q2 Target<br>11 contracts needed</div>
+        <div class="progress-wrap"><div class="progress-fill fill-amber" style="width:31%"></div></div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-num text-amber">$1.1M</div>
+        <div class="insight-label">Q3 Target<br>7 contracts needed</div>
+        <div class="progress-wrap"><div class="progress-fill fill-amber" style="width:35%"></div></div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-num text-red">28</div>
+        <div class="insight-label">New Contracts Needed<br>Q2–Q4 at ~$100K avg</div>
+        <div class="progress-wrap"><div class="progress-fill fill-red" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <strong>The math is clear:</strong> Q1 averaged $61.8K per contract. To hit the $3.18M target, average deal size must grow to ~$100K — which requires builder relationships (they buy at scale). The builder channel was 70% of revenue at $3.8M peak. Rebuilding it is the single highest-leverage action in 2026.
+    </div>
+  </div>
+
+  <!-- STRATEGY PILLARS -->
+  <div class="section" id="strategy">
+    <div class="section-label">Strategic Framework</div>
+    <div class="section-title">Three Pillars of the 2026 Plan</div>
+    <div class="grid-3">
+
+      <div class="pillar pillar-1">
+        <div class="pillar-number">Pillar 01</div>
+        <div class="pillar-title">Close Current Pipeline</div>
+        <div class="pillar-owner">Whole Team</div>
+        <div class="pillar-body">
+          The $1.57M in HOT + WARM pipeline is the fastest path to Q2 cash. These deals are already in motion.
+          <ul style="margin-top:10px;">
+            <li>HOT pipeline: $528K — target close in 30–60 days</li>
+            <li>WARM pipeline: ~$620K — nurture to close in 60–120 days</li>
+            <li>Enforce 25/50/25 deposit terms — no exceptions</li>
+            <li>Every signed contract triggers a 25% cash inflow immediately</li>
+            <li>Priority: IBP Orlando, Elevated Roots (both deals), Megan Donovan</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pillar pillar-2">
+        <div class="pillar-number">Pillar 02</div>
+        <div class="pillar-title">Builder Channel Rebuild</div>
+        <div class="pillar-owner">Juliana — Sales Manager</div>
+        <div class="pillar-body">
+          Builders were 70% of revenue at peak ($3.8M in 2023). One builder relationship = multiple $80–150K projects per year. This is the volume engine.
+          <ul style="margin-top:10px;">
+            <li>Target: Metro Boston, Rhode Island, Cape Cod markets</li>
+            <li>20+ builders identified and researched — outreach starts now</li>
+            <li>Quarterly showroom events (wine/food, 8–10 builders) = fastest network rebuild</li>
+            <li>Lead with the multi-line pitch: Delano, Cape factory, Florida, FABA</li>
+            <li>SoWa showroom is the conversion tool — get them in the door</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pillar pillar-3">
+        <div class="pillar-number">Pillar 03</div>
+        <div class="pillar-title">Architect & Designer Network</div>
+        <div class="pillar-owner">Lourdes — Business Development</div>
+        <div class="pillar-body">
+          Architects and interior designers feed the homeowner/retail pipeline — currently Santtoro's strength. Each A&D relationship creates a referral flywheel.
+          <ul style="margin-top:10px;">
+            <li>Priority 1: SoWa / South End — walk-to-showroom proximity</li>
+            <li>Start with Nicole Hogarty (NE Design Hall of Fame 2023), Koo De Kir, Janine Dowling</li>
+            <li>Monthly in-person visits + showroom walk-throughs</li>
+            <li>Curate lunch/learn events at 500 Harrison Ave</li>
+            <li>Long-term: Wellesley, Back Bay, Newton designers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUARTERLY TARGETS -->
+  <div class="section" id="quarters">
+    <div class="section-label">Revenue Plan</div>
+    <div class="section-title">Quarter-by-Quarter Breakdown</div>
+    <div class="grid-3">
+
+      <!-- Q2 -->
+      <div class="quarter-card">
+        <div class="quarter-header q2-header">
+          <div>
+            <div class="quarter-label">Q2 — Apr / May / Jun</div>
+            <div class="quarter-revenue">$1,000,000</div>
+            <div class="quarter-contracts">11 contracts to close</div>
+          </div>
+        </div>
+        <div class="quarter-body">
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">April Contracts</span>
+            <span class="quarter-stat-val">3</span>
+          </div>
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">May Contracts</span>
+            <span class="quarter-stat-val">3</span>
+          </div>
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">June Contracts</span>
+            <span class="quarter-stat-val">4</span>
+          </div>
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">Avg Deal Size</span>
+            <span class="quarter-stat-val">~$91K</span>
+          </div>
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">Builder Outreach Calls</span>
+            <span class="quarter-stat-val">60+</span>
+          </div>
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">Architect Visits</span>
+            <span class="quarter-stat-val">15–18</span>
+          </div>
+          <div class="quarter-milestones">
+            <div class="quarter-milestones-title">Key Milestones</div>
+            <div class="milestone-item"><div class="milestone-dot dot-red"></div><span>Close HOT pipeline ($528K) — these are overdue</span></div>
+            <div class="milestone-item"><div class="milestone-dot dot-blue"></div><span>First builder showroom event (April)</span></div>
+            <div class="milestone-item"><div class="milestone-dot dot-amber"></div><span>Begin WARM pipeline conversions (Sonny, Nilesh)</span></div>
+            <div class="milestone-item"><div class="milestone-dot dot-green"></div><span>Lourdes: visit all Priority 1 A&D contacts</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quarter-card">
+        <div class="quarter-header q3-header">
+          <div>
+            <div class="quarter-label">Q3 — Jul / Aug / Sep</div>
+            <div class="quarter-revenue">$1,100,000</div>
+            <div class="quarter-contracts">7 contracts to close (larger deals)</div>
+          </div>
+        </div>
+        <div class="quarter-body">
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">Avg Deal Size</span>
+            <span class="quarter-stat-val">~$157K</span>
+          </div>
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">Builder Outreach Calls</span>
+            <span class="quarter-stat-val">80+</span>
+          </div>
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">Architect Visits</span>
+            <span class="quarter-stat-val">20–24</span>
+          </div>
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">Builder Events</span>
+            <span class="quarter-stat-val">1 (July)</span>
+          </div>
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">New Builder Relationships</span>
+            <span class="quarter-stat-val">4–6</span>
+          </div>
+          <div class="quarter-milestones">
+            <div class="quarter-milestones-title">Key Milestones</div>
+            <div class="milestone-item"><div class="milestone-dot dot-amber"></div><span>First builder-sourced projects signed</span></div>
+            <div class="milestone-item"><div class="milestone-dot dot-blue"></div><span>Second quarterly builder event (July)</span></div>
+            <div class="milestone-item"><div class="milestone-dot dot-green"></div><span>Priority 2 A&D pipeline active (Dane Austin, Venegas)</span></div>
+            <div class="milestone-item"><div class="milestone-dot dot-red"></div><span>Alfa Group x2 + Kostopoulos closed from WARM</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quarter-card">
+        <div class="quarter-header q4-header">
+          <div>
+            <div class="quarter-label">Q4 — Oct / Nov / Dec</div>
+            <div class="quarter-revenue">$700,000</div>
+            <div class="quarter-contracts">7 contracts to close</div>
+          </div>
+        </div>
+        <div class="quarter-body">
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">Avg Deal Size</span>
+            <span class="quarter-stat-val">~$100K</span>
+          </div>
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">Builder Outreach Calls</span>
+            <span class="quarter-stat-val">60+</span>
+          </div>
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">Architect Visits</span>
+            <span class="quarter-stat-val">15–18</span>
+          </div>
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">Builder Events</span>
+            <span class="quarter-stat-val">1 (October)</span>
+          </div>
+          <div class="quarter-stat">
+            <span class="quarter-stat-label">2027 Pipeline Seeded</span>
+            <span class="quarter-stat-val">Yes</span>
+          </div>
+          <div class="quarter-milestones">
+            <div class="quarter-milestones-title">Key Milestones</div>
+            <div class="milestone-item"><div class="milestone-dot dot-red"></div><span>Third quarterly builder event (October)</span></div>
+            <div class="milestone-item"><div class="milestone-dot dot-blue"></div><span>RI builder relationships active (Sweenor, Horan)</span></div>
+            <div class="milestone-item"><div class="milestone-dot dot-amber"></div><span>Cape Cod builder first projects signed</span></div>
+            <div class="milestone-item"><div class="milestone-dot dot-green"></div><span>2027 pipeline target: $4M+ seeded</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revenue Chart -->
+    <div class="chart-wrapper mt-16">
+      <div class="chart-title">Monthly Revenue Target — April through December 2026</div>
+      <canvas id="revenueChart" height="100"></canvas>
+    </div>
+  </div>
+
+  <!-- MONTH-BY-MONTH ROADMAP -->
+  <div class="section" id="roadmap">
+    <div class="section-label">Execution Plan</div>
+    <div class="section-title">Month-by-Month Roadmap — April through December</div>
+
+    <div class="note-box">
+      <strong>Execution rhythm:</strong> Contracts signed in one quarter execute in the next. Q2 closings → Q3 production. Q3 closings → Q4 production. This lag means pipeline signed NOW creates cash LATER — which is why HOT deals must close immediately and builder outreach must start this week.
+    </div>
+
+    <div class="months-grid">
+
+      <!-- APRIL -->
+      <div class="month-card">
+        <div class="month-header">
+          <div>
+            <span class="month-name">April</span>
+            <span class="month-qtr-badge badge-q2">Q2</span>
+          </div>
+          <div class="month-target text-blue">$280K</div>
+        </div>
+        <div class="month-body">
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--amber)"></span>Juliana — Builder</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Reach out to all 8 Metro Boston builders (cold calls + LinkedIn)</li>
+                <li>Book 3–4 showroom visits at 500 Harrison Ave</li>
+                <li>Connect with Carmine / Lafayette — already in conversation</li>
+                <li>Host Q2 builder event (wine + food, 8–10 builders)</li>
+                <li>Build CRM tracking: all contacts, stages, follow-up dates</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--green)"></span>Lourdes — A&D</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Walk to: Nicole Hogarty Designs (SoWa) — Priority 1</li>
+                <li>Walk to: Koo De Kir Architectural Interiors (South End)</li>
+                <li>Walk to: Janine Dowling Design (South End)</li>
+                <li>Bring samples + invite to showroom walk-through</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--red)"></span>Pipeline Close</div>
+            <div class="month-section-content">
+              <ul>
+                <li><strong>IBP Orlando $150K</strong> — close this month</li>
+                <li><strong>Megan Donovan-Westport $120K</strong> — close this month</li>
+                <li>Contracts: 3 target</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-actions">
+            <span class="action-tag tag-red">HOT Deals</span>
+            <span class="action-tag tag-blue">Builder Event</span>
+            <span class="action-tag tag-green">A&D Priority 1</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAY -->
+      <div class="month-card">
+        <div class="month-header">
+          <div>
+            <span class="month-name">May</span>
+            <span class="month-qtr-badge badge-q2">Q2</span>
+          </div>
+          <div class="month-target text-blue">$320K</div>
+        </div>
+        <div class="month-body">
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--amber)"></span>Juliana — Builder</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Follow up on April contacts — book 2nd meetings</li>
+                <li>Begin Rhode Island outreach: Sweenor, Horan, Davitt Inc</li>
+                <li>Target 20 new builder calls this month</li>
+                <li>2–3 showroom visits from Metro Boston builders</li>
+                <li>Document all feedback on pricing, lead times, product lines</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--green)"></span>Lourdes — A&D</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Follow up Priority 1 visits — bring material specs</li>
+                <li>Schedule showroom walk-throughs for interested contacts</li>
+                <li>Begin Priority 2: Dane Austin Design (Back Bay)</li>
+                <li>Venegas and Company outreach</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--red)"></span>Pipeline Close</div>
+            <div class="month-section-content">
+              <ul>
+                <li><strong>Elevated Roots Halifax $143K</strong> — close</li>
+                <li><strong>Elevated Roots Kingston $140K</strong> — close</li>
+                <li>Contracts: 3 target</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-actions">
+            <span class="action-tag tag-red">Elevated Roots x2</span>
+            <span class="action-tag tag-blue">RI Outreach Begins</span>
+            <span class="action-tag tag-green">A&D Priority 2</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- JUNE -->
+      <div class="month-card">
+        <div class="month-header">
+          <div>
+            <span class="month-name">June</span>
+            <span class="month-qtr-badge badge-q2">Q2</span>
+          </div>
+          <div class="month-target text-blue">$400K</div>
+        </div>
+        <div class="month-body">
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--amber)"></span>Juliana — Builder</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Cape Cod outreach begins: McPhee, Cataldo, Mullen</li>
+                <li>3–5 builder showroom visits this month</li>
+                <li>First builder proposals submitted (Metro Boston)</li>
+                <li>Target: 1–2 builder contracts signed or imminent</li>
+                <li>Prep Q3 builder event (July) — guest list, invites</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--green)"></span>Lourdes — A&D</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Host A&D lunch/learn at showroom (4–6 designers)</li>
+                <li>Katie Rosenfeld + Co outreach (Wellesley)</li>
+                <li>Follow up all Priority 1 + 2 contacts</li>
+                <li>Target: 1 referral project from A&D channel</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--red)"></span>Pipeline Close</div>
+            <div class="month-section-content">
+              <ul>
+                <li><strong>Sonny Iannacone-Exeter $185K</strong> — target close</li>
+                <li><strong>Sheyvston-Lexington $15K</strong> — close</li>
+                <li><strong>Nilesh & Dipal-Milton $160K</strong> — target close</li>
+                <li>Contracts: 4 target</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-actions">
+            <span class="action-tag tag-red">WARM Conversions</span>
+            <span class="action-tag tag-blue">Cape Cod Launch</span>
+            <span class="action-tag tag-green">A&D Lunch/Learn</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- JULY -->
+      <div class="month-card">
+        <div class="month-header">
+          <div>
+            <span class="month-name">July</span>
+            <span class="month-qtr-badge badge-q3">Q3</span>
+          </div>
+          <div class="month-target text-amber">$380K</div>
+        </div>
+        <div class="month-body">
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--amber)"></span>Juliana — Builder</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Q3 builder showroom event (wine/food, 8–10 guests)</li>
+                <li>Follow up all RI builders — 2nd meetings</li>
+                <li>First RI builder proposals submitted</li>
+                <li>Target 2 builder contracts this month</li>
+                <li>Kirby Perkins + Hill & Harbor RI outreach</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--green)"></span>Lourdes — A&D</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Summer outreach blitz — designers planning fall projects</li>
+                <li>Follow up with designers who visited showroom</li>
+                <li>Priority 3: Catherine & McClure Interiors (Wellesley)</li>
+                <li>Target: 2 A&D-referred contracts this month</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--red)"></span>Pipeline Close</div>
+            <div class="month-section-content">
+              <ul>
+                <li><strong>Alfa Group x2 $100K</strong> — close</li>
+                <li><strong>Chris Kostopoulos-Newton $80K</strong> — close</li>
+                <li>First builder deals closing this month</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-actions">
+            <span class="action-tag tag-amber">Q3 Builder Event</span>
+            <span class="action-tag tag-blue">RI Builder Push</span>
+            <span class="action-tag tag-green">A&D Blitz</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AUGUST -->
+      <div class="month-card">
+        <div class="month-header">
+          <div>
+            <span class="month-name">August</span>
+            <span class="month-qtr-badge badge-q3">Q3</span>
+          </div>
+          <div class="month-target text-amber">$360K</div>
+        </div>
+        <div class="month-body">
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--amber)"></span>Juliana — Builder</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Cape Cod builders: Hall Custom, M. Duffany, REEF</li>
+                <li>Sleeping Dog + Hawthorn Builders — Metro Boston 2nd touches</li>
+                <li>Review Q2 builder event outcomes — who needs follow-up</li>
+                <li>GC Builders + Concept Building — site visit proposals</li>
+                <li>Target 2 builder contracts signed</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--green)"></span>Lourdes — A&D</div>
+            <div class="month-section-content">
+              <ul>
+                <li>August is slow — maintain all active A&D relationships</li>
+                <li>Prep fall events calendar (September A&D event)</li>
+                <li>Rebrand anniversary (Aug 2025) — use as PR opportunity</li>
+                <li>Send "one year in" note to all A&D contacts</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--red)"></span>Pipeline Close</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Builder-sourced deals from Q2 outreach closing</li>
+                <li>A&D-referred homeowner projects</li>
+                <li>2–3 contracts target</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-actions">
+            <span class="action-tag tag-amber">Cape Cod Push</span>
+            <span class="action-tag tag-green">Rebrand Anniversary</span>
+            <span class="action-tag tag-blue">Fall Prep</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEPTEMBER -->
+      <div class="month-card">
+        <div class="month-header">
+          <div>
+            <span class="month-name">September</span>
+            <span class="month-qtr-badge badge-q3">Q3</span>
+          </div>
+          <div class="month-target text-amber">$360K</div>
+        </div>
+        <div class="month-body">
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--amber)"></span>Juliana — Builder</div>
+            <div class="month-section-content">
+              <ul>
+                <li>North Country Companies + MNS Contractors — push hard</li>
+                <li>Auburndale Builders — site meeting + showroom tour</li>
+                <li>Meridian Custom Homes (RI) — proposal stage</li>
+                <li>Review Q3 performance vs target — adjust tactics</li>
+                <li>Plan Q4 builder event (October) — invitations out</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--green)"></span>Lourdes — A&D</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Fall A&D showroom event (September) — launch of new season</li>
+                <li>Follow up summer relationships — fall project specs</li>
+                <li>Wellesley-area designer push (Katie Rosenfeld, Catherine & McClure)</li>
+                <li>Target: 3 A&D referral leads this month</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--red)"></span>Pipeline Close</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Q4 groundwork: Contracts signed now execute in Q4</li>
+                <li>Builder deals maturing from Q2 outreach</li>
+                <li>2 contracts target</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-actions">
+            <span class="action-tag tag-green">Fall A&D Event</span>
+            <span class="action-tag tag-blue">Q4 Builder Prep</span>
+            <span class="action-tag tag-amber">Q3 Review</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- OCTOBER -->
+      <div class="month-card">
+        <div class="month-header">
+          <div>
+            <span class="month-name">October</span>
+            <span class="month-qtr-badge badge-q4">Q4</span>
+          </div>
+          <div class="month-target text-red">$260K</div>
+        </div>
+        <div class="month-body">
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--amber)"></span>Juliana — Builder</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Q4 builder showroom event — invite best prospects + 1st customers</li>
+                <li>Affinity Builders + Hawthorn — final proposals</li>
+                <li>Newport RI push: Kirby Perkins, Hill & Harbor</li>
+                <li>Cape Cod: McPhee Associates contracts stage</li>
+                <li>Invite 2023 peak-year builders (who left with Felipe) back</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--green)"></span>Lourdes — A&D</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Holiday project rush — designers finalizing specs now</li>
+                <li>Push for 2027 project specifications from A&D partners</li>
+                <li>Thank you outreach to all referral sources</li>
+                <li>Build A&D newsletter — product updates, installs</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--red)"></span>Pipeline Close</div>
+            <div class="month-section-content">
+              <ul>
+                <li>3 contracts target this month</li>
+                <li>Builder deals from RI + Cape Cod</li>
+                <li>A&D referral projects for holiday installs</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-actions">
+            <span class="action-tag tag-red">Q4 Builder Event</span>
+            <span class="action-tag tag-blue">RI + Cape Cod Push</span>
+            <span class="action-tag tag-green">2027 Seeding</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOVEMBER -->
+      <div class="month-card">
+        <div class="month-header">
+          <div>
+            <span class="month-name">November</span>
+            <span class="month-qtr-badge badge-q4">Q4</span>
+          </div>
+          <div class="month-target text-red">$240K</div>
+        </div>
+        <div class="month-body">
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--amber)"></span>Juliana — Builder</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Builder year-end planning calls — "What's in your 2027 pipeline?"</li>
+                <li>Present Santtoro as preferred vendor for 2027 projects</li>
+                <li>Mullen Building + Hall Custom Builders (Cape) — close</li>
+                <li>Davitt Inc RI — close or strong proposal</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--green)"></span>Lourdes — A&D</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Holiday gifting to all A&D partners (tasteful, memorable)</li>
+                <li>Janine Dowling, Nicole Hogarty — year-end reviews</li>
+                <li>Invite designers to holiday showroom open house</li>
+                <li>2027 project conversations begin</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--red)"></span>Pipeline Close</div>
+            <div class="month-section-content">
+              <ul>
+                <li>2 contracts target</li>
+                <li>Year-end closings — buyers want projects started in Jan</li>
+                <li>Enforce deposit terms strictly — holidays = cash crunch</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-actions">
+            <span class="action-tag tag-blue">2027 Planning</span>
+            <span class="action-tag tag-green">Holiday Gifting</span>
+            <span class="action-tag tag-amber">Year-End Close</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DECEMBER -->
+      <div class="month-card">
+        <div class="month-header">
+          <div>
+            <span class="month-name">December</span>
+            <span class="month-qtr-badge badge-q4">Q4</span>
+          </div>
+          <div class="month-target text-red">$200K</div>
+        </div>
+        <div class="month-body">
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--amber)"></span>Juliana — Builder</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Holiday builder open house at SoWa showroom</li>
+                <li>Lock in 2027 builder commitments (preferred vendor agreements)</li>
+                <li>Any remaining Q4 proposals — push to close before Dec 20</li>
+                <li>Year-end report: builders contacted, visited, converted</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--green)"></span>Lourdes — A&D</div>
+            <div class="month-section-content">
+              <ul>
+                <li>Holiday showroom open house — invite all A&D + prospects</li>
+                <li>2027 A&D project specs: get on the list for January starts</li>
+                <li>Year-end: tally referrals by A&D source — reward top referrers</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-section">
+            <div class="month-section-label"><span class="label-dot" style="background:var(--red)"></span>Pipeline Close</div>
+            <div class="month-section-content">
+              <ul>
+                <li>2 contracts target (pre-holiday rush)</li>
+                <li>Enforce 25% deposit — cash coming into year end is critical</li>
+                <li>2027 pipeline: target $1.5M+ already signed going into January</li>
+              </ul>
+            </div>
+          </div>
+          <div class="month-actions">
+            <span class="action-tag tag-blue">Holiday Open House</span>
+            <span class="action-tag tag-green">2027 Lock-in</span>
+            <span class="action-tag tag-red">Year-End Close</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PIPELINE CLOSE PLAN -->
+  <div class="section" id="pipeline">
+    <div class="section-label">Current Deals</div>
+    <div class="section-title">Pipeline Close Plan — HOT &amp; WARM</div>
+
+    <div class="two-col">
+      <!-- HOT -->
+      <div class="card">
+        <div class="card-title" style="color:var(--red)">HOT Pipeline — $528K</div>
+        <div style="overflow-x:auto;">
+          <div class="pipeline-row header-row">
+            <div class="pipeline-cell">Prospect</div>
+            <div class="pipeline-cell">Value</div>
+            <div class="pipeline-cell">Target Close</div>
+            <div class="pipeline-cell">Action</div>
+            <div class="pipeline-cell">Status</div>
+          </div>
+          <div class="pipeline-row">
+            <div class="pipeline-cell"><span class="pipeline-name">IBP Orlando</span></div>
+            <div class="pipeline-cell"><span class="pipeline-amount">$150K</span></div>
+            <div class="pipeline-cell">April</div>
+            <div class="pipeline-cell">Final proposal</div>
+            <div class="pipeline-cell"><span class="priority-badge priority-hot">HOT</span></div>
+          </div>
+          <div class="pipeline-row">
+            <div class="pipeline-cell"><span class="pipeline-name">Megan Donovan-Westport</span></div>
+            <div class="pipeline-cell"><span class="pipeline-amount">$120K</span></div>
+            <div class="pipeline-cell">April</div>
+            <div class="pipeline-cell">Contract ready</div>
+            <div class="pipeline-cell"><span class="priority-badge priority-hot">HOT</span></div>
+          </div>
+          <div class="pipeline-row">
+            <div class="pipeline-cell"><span class="pipeline-name">Elevated Roots Halifax</span></div>
+            <div class="pipeline-cell"><span class="pipeline-amount">$143K</span></div>
+            <div class="pipeline-cell">May</div>
+            <div class="pipeline-cell">Scope confirm</div>
+            <div class="pipeline-cell"><span class="priority-badge priority-hot">HOT</span></div>
+          </div>
+          <div class="pipeline-row">
+            <div class="pipeline-cell"><span class="pipeline-name">Elevated Roots Kingston</span></div>
+            <div class="pipeline-cell"><span class="pipeline-amount">$140K</span></div>
+            <div class="pipeline-cell">May</div>
+            <div class="pipeline-cell">Scope confirm</div>
+            <div class="pipeline-cell"><span class="priority-badge priority-hot">HOT</span></div>
+          </div>
+          <div class="pipeline-row">
+            <div class="pipeline-cell"><span class="pipeline-name">Sheyvston-Lexington</span></div>
+            <div class="pipeline-cell"><span class="pipeline-amount">$15K</span></div>
+            <div class="pipeline-cell">April–May</div>
+            <div class="pipeline-cell">Close quickly</div>
+            <div class="pipeline-cell"><span class="priority-badge priority-hot">HOT</span></div>
+          </div>
+          <div class="pipeline-row pipeline-total-row">
+            <div class="pipeline-cell"><strong>HOT Total</strong></div>
+            <div class="pipeline-cell"><span class="pipeline-amount text-red">$568K</span></div>
+            <div class="pipeline-cell">Apr–May</div>
+            <div class="pipeline-cell"></div>
+            <div class="pipeline-cell"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WARM -->
+      <div class="card">
+        <div class="card-title" style="color:var(--amber)">WARM Pipeline — ~$620K</div>
+        <div style="overflow-x:auto;">
+          <div class="pipeline-row header-row">
+            <div class="pipeline-cell">Prospect</div>
+            <div class="pipeline-cell">Value</div>
+            <div class="pipeline-cell">Target Close</div>
+            <div class="pipeline-cell">Action</div>
+            <div class="pipeline-cell">Status</div>
+          </div>
+          <div class="pipeline-row">
+            <div class="pipeline-cell"><span class="pipeline-name">Sonny Iannacone-Exeter</span></div>
+            <div class="pipeline-cell"><span class="pipeline-amount">$185K</span></div>
+            <div class="pipeline-cell">June</div>
+            <div class="pipeline-cell">Nurture + proposal</div>
+            <div class="pipeline-cell"><span class="priority-badge priority-warm">WARM</span></div>
+          </div>
+          <div class="pipeline-row">
+            <div class="pipeline-cell"><span class="pipeline-name">Nilesh &amp; Dipal-Milton</span></div>
+            <div class="pipeline-cell"><span class="pipeline-amount">$160K</span></div>
+            <div class="pipeline-cell">June</div>
+            <div class="pipeline-cell">Showroom visit</div>
+            <div class="pipeline-cell"><span class="priority-badge priority-warm">WARM</span></div>
+          </div>
+          <div class="pipeline-row">
+            <div class="pipeline-cell"><span class="pipeline-name">Alfa Group x2</span></div>
+            <div class="pipeline-cell"><span class="pipeline-amount">$100K</span></div>
+            <div class="pipeline-cell">July</div>
+            <div class="pipeline-cell">Two projects</div>
+            <div class="pipeline-cell"><span class="priority-badge priority-warm">WARM</span></div>
+          </div>
+          <div class="pipeline-row">
+            <div class="pipeline-cell"><span class="pipeline-name">Chris Kostopoulos-Newton</span></div>
+            <div class="pipeline-cell"><span class="pipeline-amount">$80K</span></div>
+            <div class="pipeline-cell">July</div>
+            <div class="pipeline-cell">Follow up</div>
+            <div class="pipeline-cell"><span class="priority-badge priority-warm">WARM</span></div>
+          </div>
+          <div class="pipeline-row">
+            <div class="pipeline-cell"><span class="pipeline-name">Carmine / Lafayette</span></div>
+            <div class="pipeline-cell"><span class="pipeline-amount">TBD</span></div>
+            <div class="pipeline-cell">May–June</div>
+            <div class="pipeline-cell">Already talking</div>
+            <div class="pipeline-cell"><span class="priority-badge priority-active">ACTIVE</span></div>
+          </div>
+          <div class="pipeline-row pipeline-total-row">
+            <div class="pipeline-cell"><strong>WARM Total</strong></div>
+            <div class="pipeline-cell"><span class="pipeline-amount text-amber">~$620K</span></div>
+            <div class="pipeline-cell">Jun–Jul</div>
+            <div class="pipeline-cell"></div>
+            <div class="pipeline-cell"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-box mt-16">
+      <strong>Total identified pipeline: $1.57M</strong> — HOT $528K + WARM $620K. This pipeline alone covers 49% of the $3.18M annual target. The remaining 51% ($1.6M+) must come from builder outreach and A&D referrals seeded April through August. Speed of HOT conversions directly funds operations — cash is tight.
+    </div>
+  </div>
+
+  <!-- BUILDER TARGET LIST -->
+  <div class="section" id="builders">
+    <div class="section-label">Juliana's Hit List</div>
+    <div class="section-title">Builder Target List by Market</div>
+
+    <div class="note-box">
+      <strong>Outreach sequence for each builder:</strong> Call (introduce, ask about upcoming projects) → Email follow-up with product brief → Showroom visit at 500 Harrison → Proposal → Contract. First call script: "We rebranded in August and significantly expanded our lines — Delano European, high-end custom through our Cape factory, contemporary from Florida with faster lead times, and FABA wood. Worth 20 minutes at our SoWa showroom?"
+    </div>
+
+    <div class="target-group">
+      <div class="target-group-header">
+        <div class="target-group-title">Metro Boston</div>
+        <div class="target-count">8 builders — start immediately</div>
+      </div>
+      <div class="card" style="padding:0; overflow:hidden;">
+        <table class="target-table">
+          <thead>
+            <tr>
+              <th>Builder</th>
+              <th>Priority</th>
+              <th>Outreach Month</th>
+              <th>Notes / Angle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>GC Builders</strong></td>
+              <td><span class="priority-badge priority-1">Priority 1</span></td>
+              <td>April</td>
+              <td>Lead with Delano European line — high-end positioning</td>
+            </tr>
+            <tr>
+              <td><strong>Concept Building</strong></td>
+              <td><span class="priority-badge priority-1">Priority 1</span></td>
+              <td>April</td>
+              <td>Contemporary + Florida line (faster lead times)</td>
+            </tr>
+            <tr>
+              <td><strong>Affinity Builders</strong></td>
+              <td><span class="priority-badge priority-1">Priority 1</span></td>
+              <td>April</td>
+              <td>Multi-line capability pitch — any project spec</td>
+            </tr>
+            <tr>
+              <td><strong>Auburndale Builders</strong></td>
+              <td><span class="priority-badge priority-1">Priority 1</span></td>
+              <td>April</td>
+              <td>Proximity to Newton/Lexington target markets</td>
+            </tr>
+            <tr>
+              <td><strong>North Country Companies</strong></td>
+              <td><span class="priority-badge priority-2">Priority 2</span></td>
+              <td>May</td>
+              <td>Custom factory Cape Cod line</td>
+            </tr>
+            <tr>
+              <td><strong>Sleeping Dog Properties</strong></td>
+              <td><span class="priority-badge priority-2">Priority 2</span></td>
+              <td>May</td>
+              <td>High-end residential — Delano + FABA wood angle</td>
+            </tr>
+            <tr>
+              <td><strong>Hawthorn Builders</strong></td>
+              <td><span class="priority-badge priority-2">Priority 2</span></td>
+              <td>May</td>
+              <td>Wellesley / Newton market — premium positioning</td>
+            </tr>
+            <tr>
+              <td><strong>MNS Contractors</strong></td>
+              <td><span class="priority-badge priority-2">Priority 2</span></td>
+              <td>June</td>
+              <td>General contractor — flexible line fit</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="target-group">
+      <div class="target-group-header">
+        <div class="target-group-title">Rhode Island — Newport &amp; Providence</div>
+        <div class="target-count">6 builders — begin May outreach</div>
+      </div>
+      <div class="card" style="padding:0; overflow:hidden;">
+        <table class="target-table">
+          <thead>
+            <tr>
+              <th>Builder</th>
+              <th>Priority</th>
+              <th>Outreach Month</th>
+              <th>Notes / Angle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Sweenor Builders</strong></td>
+              <td><span class="priority-badge priority-1">Priority 1</span></td>
+              <td>May</td>
+              <td>Newport-area premium builder — Delano European line</td>
+            </tr>
+            <tr>
+              <td><strong>Horan Building Company</strong></td>
+              <td><span class="priority-badge priority-1">Priority 1</span></td>
+              <td>May</td>
+              <td>Providence-area — full line capability</td>
+            </tr>
+            <tr>
+              <td><strong>Davitt Inc</strong></td>
+              <td><span class="priority-badge priority-1">Priority 1</span></td>
+              <td>May</td>
+              <td>Custom builds — Cape Cod factory line appeal</td>
+            </tr>
+            <tr>
+              <td><strong>Kirby Perkins</strong></td>
+              <td><span class="priority-badge priority-2">Priority 2</span></td>
+              <td>June</td>
+              <td>Luxury residential — FABA wood + Delano</td>
+            </tr>
+            <tr>
+              <td><strong>Hill &amp; Harbor</strong></td>
+              <td><span class="priority-badge priority-2">Priority 2</span></td>
+              <td>June</td>
+              <td>Waterfront homes — contemporary Florida line</td>
+            </tr>
+            <tr>
+              <td><strong>Meridian Custom Homes</strong></td>
+              <td><span class="priority-badge priority-2">Priority 2</span></td>
+              <td>July</td>
+              <td>High-end custom — all product lines relevant</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="target-group">
+      <div class="target-group-header">
+        <div class="target-group-title">Cape Cod</div>
+        <div class="target-count">6 builders — begin June outreach</div>
+      </div>
+      <div class="card" style="padding:0; overflow:hidden;">
+        <table class="target-table">
+          <thead>
+            <tr>
+              <th>Builder</th>
+              <th>Priority</th>
+              <th>Outreach Month</th>
+              <th>Notes / Angle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>McPhee Associates</strong></td>
+              <td><span class="priority-badge priority-1">Priority 1</span></td>
+              <td>June</td>
+              <td>Local presence — Cape Cod factory is unique advantage</td>
+            </tr>
+            <tr>
+              <td><strong>Cataldo Custom Builders</strong></td>
+              <td><span class="priority-badge priority-1">Priority 1</span></td>
+              <td>June</td>
+              <td>Custom builds — traditional high-end Cape line</td>
+            </tr>
+            <tr>
+              <td><strong>Mullen Building</strong></td>
+              <td><span class="priority-badge priority-1">Priority 1</span></td>
+              <td>June</td>
+              <td>Cape Cod presence — fastest on-site relationship</td>
+            </tr>
+            <tr>
+              <td><strong>Hall Custom Builders</strong></td>
+              <td><span class="priority-badge priority-2">Priority 2</span></td>
+              <td>July</td>
+              <td>High-end Cape — full product line pitch</td>
+            </tr>
+            <tr>
+              <td><strong>M. Duffany Builders</strong></td>
+              <td><span class="priority-badge priority-2">Priority 2</span></td>
+              <td>August</td>
+              <td>Custom residential — FABA wood + traditional line</td>
+            </tr>
+            <tr>
+              <td><strong>REEF Cape Cod</strong></td>
+              <td><span class="priority-badge priority-2">Priority 2</span></td>
+              <td>August</td>
+              <td>Contemporary builds — Florida line + faster lead times</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHITECT / DESIGNER TARGETS -->
+  <div class="section" id="architects">
+    <div class="section-label">Lourdes's Hit List</div>
+    <div class="section-title">Architect &amp; Designer Targets</div>
+
+    <div class="note-box">
+      <strong>Lourdes's focus:</strong> Build relationships, not transactions. Each A&D partner who specifies Santtoro creates a recurring referral stream. The SoWa showroom at 500 Harrison Ave is the conversion tool — every relationship ends with a showroom visit. Priority 1 firms can literally walk to the showroom.
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="target-table">
+        <thead>
+          <tr>
+            <th>Firm / Designer</th>
+            <th>Location</th>
+            <th>Tier</th>
+            <th>Outreach Month</th>
+            <th>Why They Matter</th>
+            <th>Entry Angle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Nicole Hogarty Designs</strong></td>
+            <td>SoWa</td>
+            <td><span class="priority-badge priority-1">Priority 1</span></td>
+            <td>April — Week 1</td>
+            <td>NE Design Hall of Fame 2023. Walk-to showroom. High-end residential.</td>
+            <td>Congratulate on award, invite to coffee + showroom tour</td>
+          </tr>
+          <tr>
+            <td><strong>Koo De Kir Architectural Interiors</strong></td>
+            <td>South End</td>
+            <td><span class="priority-badge priority-1">Priority 1</span></td>
+            <td>April — Week 1</td>
+            <td>Architectural interiors — cabinetry is core to their work</td>
+            <td>Walk in with samples, invite to showroom</td>
+          </tr>
+          <tr>
+            <td><strong>Janine Dowling Design</strong></td>
+            <td>South End</td>
+            <td><span class="priority-badge priority-1">Priority 1</span></td>
+            <td>April — Week 2</td>
+            <td>South End neighborhood — high-end residential</td>
+            <td>Neighborhood connection + showroom proximity angle</td>
+          </tr>
+          <tr>
+            <td><strong>Dane Austin Design</strong></td>
+            <td>Back Bay / Newton / Wellesley</td>
+            <td><span class="priority-badge priority-2">Priority 2</span></td>
+            <td>May</td>
+            <td>Covers all three key Juliana builder markets</td>
+            <td>Multi-market presence — we cover the same geography</td>
+          </tr>
+          <tr>
+            <td><strong>Venegas and Company</strong></td>
+            <td>Boston</td>
+            <td><span class="priority-badge priority-2">Priority 2</span></td>
+            <td>May</td>
+            <td>Established Boston firm, high-end portfolio</td>
+            <td>Rebranding story — new lines, new capabilities, same quality</td>
+          </tr>
+          <tr>
+            <td><strong>Katie Rosenfeld + Co</strong></td>
+            <td>Wellesley</td>
+            <td><span class="priority-badge priority-2">Priority 2</span></td>
+            <td>June</td>
+            <td>Wellesley — aligns with builder territory target</td>
+            <td>Synergy with Newton/Wellesley builder push</td>
+          </tr>
+          <tr>
+            <td><strong>Catherine &amp; McClure Interiors</strong></td>
+            <td>Wellesley</td>
+            <td><span class="priority-badge priority-3">Priority 3</span></td>
+            <td>July</td>
+            <td>Wellesley high-end interiors</td>
+            <td>Traditional + Cape Cod line — classic New England aesthetic</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- THE PLAYBOOK -->
+  <div class="section" id="playbook">
+    <div class="section-label">How We Win</div>
+    <div class="section-title">The Playbook</div>
+
+    <div class="two-col">
+
+      <!-- Builder Outreach Sequence -->
+      <div class="playbook-section">
+        <div class="playbook-header">
+          <div class="playbook-icon">&#9654;</div>
+          <div class="playbook-title">Builder Outreach Sequence — 5 Steps</div>
+        </div>
+        <div class="playbook-body">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <strong>The Cold Call (Day 1)</strong>
+              <p>Call the builder directly. Introduce Santtoro by name, mention the rebrand, ask: "What kind of projects are you working on this year?" Listen first. Then: "We significantly expanded our lines — Delano European, custom Cape factory, contemporary Florida (faster lead times), FABA wood. Worth 20 minutes at our SoWa showroom?"</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <strong>Email Follow-Up (Day 2)</strong>
+              <p>Send a clean one-page product brief: product lines, lead times, photo of the SoWa showroom. Include a direct calendar link to book a showroom visit. Subject: "Santtoro — cabinet partner for [Builder Name] projects."</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <strong>Showroom Visit (Week 2–3)</strong>
+              <p>Get them to 500 Harrison Ave. This is the conversion event. Walk through all product lines, show actual samples, discuss lead times and pricing tiers. Have Juliana (and owner when relevant) present. Bring specific product recommendations for their known project types.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <strong>Project-Specific Proposal (Week 3–4)</strong>
+              <p>Ask: "What's one project coming up in the next 60–90 days where we could submit a quote?" Submit a clean proposal within 48 hours of the ask. Price competitively — winning the first project is more important than margin on project #1.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">5</div>
+            <div class="step-content">
+              <strong>Close + Deposit (Week 4–6)</strong>
+              <p>Explain payment terms clearly: 25% at signing, 50% when materials ordered, 25% at delivery. This is non-negotiable — cash is tight. Once the first project closes, maintain relationship with regular check-ins and invite to quarterly builder events.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Showroom Event Strategy -->
+      <div class="playbook-section">
+        <div class="playbook-header">
+          <div class="playbook-icon">&#9670;</div>
+          <div class="playbook-title">Quarterly Builder Event Strategy</div>
+        </div>
+        <div class="playbook-body">
+          <div class="step">
+            <div class="step-num" style="background:var(--amber)">Q2</div>
+            <div class="step-content">
+              <strong>April Event — Launch Event</strong>
+              <p>8–10 Metro Boston builders. Wine, food, showroom walk-through. Introduce Juliana and owner. Show all four product lines. Collect business cards + project pipeline info. Goal: 3–4 follow-up meetings booked that night.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--amber)">Q3</div>
+            <div class="step-content">
+              <strong>July Event — Expansion</strong>
+              <p>Mix: 4–5 Metro Boston (2nd touch) + 4–5 new (RI, Cape Cod). Invite 1–2 builders who signed contracts — social proof. Show completed project photos. Goal: RI + Cape Cod relationships activated.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--red)">Q4</div>
+            <div class="step-content">
+              <strong>October Event — Relationship Deepening</strong>
+              <p>Invite existing customers + best prospects. Show completed Santtoro installs. Focus on 2027 project pipeline — who has what coming up? Lock in preferred vendor conversations for next year. Toast to the year.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--green)">DEC</div>
+            <div class="step-content">
+              <strong>December Holiday Open House</strong>
+              <p>Combined builder + A&D + homeowner event. Broader invite list. Show the best of 2026's completed work. Position Santtoro as the premier cabinetry brand in Boston. Seed 2027 relationships.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="two-col mt-16">
+
+      <!-- Deposit Terms -->
+      <div class="playbook-section">
+        <div class="playbook-header">
+          <div class="playbook-icon">&#36;</div>
+          <div class="playbook-title">Payment Terms — Non-Negotiable</div>
+        </div>
+        <div class="playbook-body">
+          <div class="terms-grid">
+            <div class="term-item">
+              <span class="term-pct">25%</span>
+              <div class="term-label">At Signing</div>
+              <div class="term-desc">Deposit collected with the contract. No signed contract without this check.</div>
+            </div>
+            <div class="term-item">
+              <span class="term-pct">50%</span>
+              <div class="term-label">Materials Ordered</div>
+              <div class="term-desc">Collected when materials are placed with manufacturer. Order doesn't start until paid.</div>
+            </div>
+            <div class="term-item">
+              <span class="term-pct">25%</span>
+              <div class="term-label">At Delivery</div>
+              <div class="term-desc">Final payment upon delivery to job site or showroom. Delivery doesn't happen without this.</div>
+            </div>
+          </div>
+          <div style="margin-top:16px; padding:12px; background:var(--red-light); border-left:3px solid var(--red); border-radius:var(--radius); font-size:12px; color:var(--text-secondary); line-height:1.6;">
+            <strong style="color:var(--red);">CRITICAL:</strong> Do NOT agree to "no deposit until materials arrive." Cash is tight — minimum balance is -$33,880. Every unsigned contract and uncollected deposit is a direct threat to operations. If a customer pushes back on terms, escalate — do not concede.
+          </div>
+        </div>
+      </div>
+
+      <!-- Multi-Line Pitch -->
+      <div class="playbook-section">
+        <div class="playbook-header">
+          <div class="playbook-icon">&#9632;</div>
+          <div class="playbook-title">Multi-Line Positioning</div>
+        </div>
+        <div class="playbook-body">
+          <div class="pitch-box">
+            "We rebranded in August and significantly expanded our lines — Delano European high-end, custom through our Cape Cod factory for traditional high-end, contemporary from Florida with faster lead times, and FABA solid wood. We can match any project spec. Worth 20 minutes at our SoWa showroom?"
+          </div>
+          <div style="margin-top:16px;">
+            <div class="quarter-stat">
+              <span class="quarter-stat-label">Delano</span>
+              <span style="font-size:12px;color:var(--text-secondary);">European high-end — luxury, import, premium</span>
+            </div>
+            <div class="quarter-stat">
+              <span class="quarter-stat-label">Cape Cod Factory</span>
+              <span style="font-size:12px;color:var(--text-secondary);">Custom, traditional high-end, American-made</span>
+            </div>
+            <div class="quarter-stat">
+              <span class="quarter-stat-label">Florida Contemporary</span>
+              <span style="font-size:12px;color:var(--text-secondary);">Modern, faster lead times, competitive pricing</span>
+            </div>
+            <div class="quarter-stat">
+              <span class="quarter-stat-label">FABA Wood</span>
+              <span style="font-size:12px;color:var(--text-secondary);">Solid wood, natural materials, artisan quality</span>
+            </div>
+          </div>
+          <div style="margin-top:12px; font-size:12px; color:var(--text-secondary); line-height:1.6;">
+            <strong>The key insight:</strong> Builders and designers hate saying no to clients because of product limitations. Santtoro's four lines mean you can say yes to virtually any specification. This is the differentiator — lead with it every time.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- REVENUE TO DATE / PROGRESS -->
+  <div class="section" id="progress">
+    <div class="section-label">Year in Review</div>
+    <div class="section-title">Context: Why This Plan Exists</div>
+    <div class="card">
+      <div style="overflow-x:auto;">
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-radius:var(--radius); overflow:hidden; border:1px solid var(--border-light);">
+          <div style="padding:16px 20px; border-right:1px solid var(--border-light);">
+            <div style="font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);margin-bottom:6px;">2023 Peak</div>
+            <div style="font-family:var(--font-serif);font-size:28px;color:var(--green);">$3.8M</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">70% from builders (Felipe's network)</div>
+          </div>
+          <div style="padding:16px 20px; border-right:1px solid var(--border-light);">
+            <div style="font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);margin-bottom:6px;">2024</div>
+            <div style="font-family:var(--font-serif);font-size:28px;color:var(--amber);">$2.0M</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Ownership change, builder network loss</div>
+          </div>
+          <div style="padding:16px 20px; border-right:1px solid var(--border-light);">
+            <div style="font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);margin-bottom:6px;">2025</div>
+            <div style="font-family:var(--font-serif);font-size:28px;color:var(--red);">$1.5M</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Rebranded Aug 2025. $1.5M invested Dec 2024.</div>
+          </div>
+          <div style="padding:16px 20px;">
+            <div style="font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);margin-bottom:6px;">2026 Target</div>
+            <div style="font-family:var(--font-serif);font-size:28px;color:var(--blue);">$3.18M</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Back to near-peak. Builder channel rebuild.</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px;font-size:12px;color:var(--text-secondary);line-height:1.7;">
+        <strong>The story:</strong> Santtoro hit $3.8M in 2023 with a builder-heavy model. When Felipe left with the builder network, revenue dropped 47% over two years. The new owner invested $1.5M in December 2024, rebranded in August 2025, and is now executing this plan to rebuild the builder channel and return to near-peak revenue. The tools are in place — the SoWa showroom, four product lines, Juliana for builders, Lourdes for A&D. Execution is everything.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  SANTTORO &nbsp;&#8212;&nbsp; 500 HARRISON AVE, BOSTON SOWA &nbsp;&#8212;&nbsp; 2026 GROWTH ROADMAP &nbsp;&#8212;&nbsp; CONFIDENTIAL
+</div>
+
+<script>
+  // Revenue Chart
+  const ctx = document.getElementById('revenueChart').getContext('2d');
+
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+  const labelColor = isDark ? '#7a7268' : '#7a7268';
+  const textColor = isDark ? '#b8b2a8' : '#4a4540';
+
+  const months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const targets = [280, 320, 400, 380, 360, 360, 260, 240, 200];
+  const quarterColors = [
+    '#378ADD', '#378ADD', '#378ADD',
+    '#EF9F27', '#EF9F27', '#EF9F27',
+    '#E24B4A', '#E24B4A', '#E24B4A'
+  ];
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [{
+        label: 'Monthly Target ($K)',
+        data: targets,
+        backgroundColor: quarterColors.map(c => c + 'cc'),
+        borderColor: quarterColors,
+        borderWidth: 1,
+        borderRadius: 3,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => `$${ctx.parsed.y}K`,
+            title: ctx => {
+              const m = ctx[0].label;
+              const q = ['Apr','May','Jun'].includes(m) ? 'Q2' : ['Jul','Aug','Sep'].includes(m) ? 'Q3' : 'Q4';
+              return `${m} (${q})`;
+            }
+          },
+          backgroundColor: isDark ? '#232018' : '#ffffff',
+          titleColor: isDark ? '#e8e4dc' : '#1c1a17',
+          bodyColor: isDark ? '#b8b2a8' : '#4a4540',
+          borderColor: isDark ? '#3a3630' : '#d6d0c6',
+          borderWidth: 1,
+          padding: 10,
+          titleFont: { family: 'Georgia, serif', size: 13 },
+          bodyFont: { family: 'Courier New, monospace', size: 12 }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: gridColor },
+          ticks: {
+            color: labelColor,
+            font: { family: 'Courier New, monospace', size: 10 }
+          }
+        },
+        y: {
+          grid: { color: gridColor },
+          ticks: {
+            color: labelColor,
+            font: { family: 'Courier New, monospace', size: 10 },
+            callback: v => `$${v}K`
+          },
+          beginAtZero: true,
+          max: 500
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
