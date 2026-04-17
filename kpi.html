@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santtoro — Team Performance Dashboard</title>
+<style>
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f3;
+    --bg-tertiary: #eeece8;
+    --text-primary: #1a1a1a;
+    --text-secondary: #666660;
+    --text-tertiary: #999993;
+    --border: rgba(0,0,0,0.10);
+    --border-strong: rgba(0,0,0,0.18);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --accent-blue: #378ADD;
+    --accent-green: #3B6D11;
+    --accent-amber: #854F0B;
+    --accent-red: #A32D2D;
+    --hot: #E24B4A;
+    --warm: #EF9F27;
+    --cold: #378ADD;
+    --juliana: #1B3A6B;
+    --juliana-light: #EEF3FB;
+    --lourdes: #1A4D3A;
+    --lourdes-light: #EBF5EF;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-primary: #1c1c1a;
+      --bg-secondary: #252523;
+      --bg-tertiary: #2e2e2b;
+      --text-primary: #f0efe9;
+      --text-secondary: #a8a8a0;
+      --text-tertiary: #6e6e68;
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.15);
+      --juliana-light: #1a2840;
+      --lourdes-light: #152b22;
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Courier New', Courier, monospace;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 13px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* EDIT MODE BODY STATE */
+  body.edit-mode {
+    --edit-tint: rgba(239, 159, 39, 0.06);
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--bg-primary);
+    border-bottom: 0.5px solid var(--border-strong);
+    padding: 20px 32px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background 0.2s;
+  }
+
+  body.edit-mode .header {
+    background: #fffbf0;
+    border-bottom-color: #EF9F27;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body.edit-mode .header {
+      background: #2a2618;
+      border-bottom-color: #EF9F27;
+    }
+  }
+
+  .header-left h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 20px;
+    font-weight: normal;
+    letter-spacing: 0.02em;
+    color: var(--text-primary);
+  }
+
+  .header-left .subtitle {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .header-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+
+  .week-badge {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+
+  .edit-btn {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border-strong);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .edit-btn:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+  }
+
+  body.edit-mode .edit-btn {
+    background: #EF9F27;
+    color: #fff;
+    border-color: #EF9F27;
+  }
+
+  /* EDIT MODE ACTIONS BAR */
+  .edit-actions {
+    display: none;
+    background: #fffbf0;
+    border-bottom: 0.5px solid #EF9F27;
+    padding: 10px 32px;
+    gap: 10px;
+    align-items: center;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .edit-actions {
+      background: #2a2618;
+    }
+  }
+
+  body.edit-mode .edit-actions {
+    display: flex;
+  }
+
+  .edit-notice {
+    font-size: 10px;
+    color: #854F0B;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    flex: 1;
+  }
+
+  .btn-save {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 7px 18px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: #3B6D11;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    transition: opacity 0.15s;
+  }
+
+  .btn-save:hover { opacity: 0.85; }
+
+  .btn-cancel {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border-strong);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-cancel:hover {
+    background: var(--bg-tertiary);
+  }
+
+  /* MAIN LAYOUT */
+  .main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 28px 32px 48px;
+  }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 32px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  .section-divider {
+    flex: 1;
+    height: 0.5px;
+    background: var(--border);
+  }
+
+  /* PERSON SECTION ACCENT */
+  .section-juliana .section-label { color: var(--juliana); }
+  .section-lourdes .section-label { color: var(--lourdes); }
+
+  /* CARDS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .cards-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .cards-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  @media (max-width: 1024px) {
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+    .cards-grid-3 { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 640px) {
+    .cards-grid, .cards-grid-3, .cards-grid-2 { grid-template-columns: 1fr; }
+    .main { padding: 16px 16px 40px; }
+    .header { padding: 16px; }
+  }
+
+  /* CARD */
+  .card {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+    transition: border-color 0.15s;
+  }
+
+  .card-label {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 8px;
+  }
+
+  .card-value {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    color: var(--text-primary);
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+
+  .card-value.small {
+    font-size: 20px;
+  }
+
+  .card-sub {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-bottom: 10px;
+  }
+
+  /* PROGRESS BAR */
+  .progress-track {
+    height: 4px;
+    background: var(--bg-tertiary);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-fill.blue { background: var(--accent-blue); }
+  .progress-fill.green { background: #4CAF50; }
+  .progress-fill.amber { background: var(--warm); }
+  .progress-fill.red { background: var(--hot); }
+
+  /* STATUS BADGE */
+  .badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-top: 6px;
+  }
+
+  .badge-green { background: #e8f5e9; color: #3B6D11; }
+  .badge-amber { background: #fff3e0; color: #854F0B; }
+  .badge-red { background: #fdecea; color: #A32D2D; }
+
+  @media (prefers-color-scheme: dark) {
+    .badge-green { background: #1a3010; color: #7bc47f; }
+    .badge-amber { background: #2d2010; color: #f5b942; }
+    .badge-red { background: #2d1010; color: #e57373; }
+  }
+
+  /* PERSON CARDS */
+  .person-card {
+    border-radius: var(--radius-lg);
+    padding: 0;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border: 0.5px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  .person-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .person-header-juliana {
+    background: var(--juliana-light);
+    border-bottom: 0.5px solid rgba(27, 58, 107, 0.15);
+  }
+
+  .person-header-lourdes {
+    background: var(--lourdes-light);
+    border-bottom: 0.5px solid rgba(26, 77, 58, 0.15);
+  }
+
+  .person-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, serif;
+    font-size: 14px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .avatar-juliana { background: var(--juliana); }
+  .avatar-lourdes { background: var(--lourdes); }
+
+  .person-info h2 {
+    font-family: Georgia, serif;
+    font-size: 16px;
+    font-weight: normal;
+    color: var(--text-primary);
+  }
+
+  .person-info .role {
+    font-size: 10px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  .person-body {
+    background: var(--bg-primary);
+    padding: 20px;
+  }
+
+  /* KPI TABLE */
+  .kpi-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+  }
+
+  .kpi-table th {
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    text-align: left;
+    padding: 6px 10px 6px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .kpi-table th:not(:first-child) { text-align: right; }
+
+  .kpi-table td {
+    padding: 8px 10px 8px 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 12px;
+    vertical-align: middle;
+  }
+
+  .kpi-table td:first-child {
+    color: var(--text-secondary);
+    font-size: 11px;
+  }
+
+  .kpi-table td:not(:first-child) { text-align: right; }
+
+  .kpi-table tr:last-child td { border-bottom: none; }
+
+  .val-actual {
+    font-family: Georgia, serif;
+    font-size: 15px;
+    font-weight: normal;
+  }
+
+  .val-target {
+    color: var(--text-tertiary);
+    font-size: 11px;
+  }
+
+  /* PIPELINE SECTION */
+  .pipeline-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1.2fr;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  @media (max-width: 1024px) {
+    .pipeline-row { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    .pipeline-row { grid-template-columns: 1fr; }
+  }
+
+  .pipeline-card {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+  }
+
+  .pipeline-card.hot { border-top: 3px solid var(--hot); }
+  .pipeline-card.warm { border-top: 3px solid var(--warm); }
+  .pipeline-card.cold { border-top: 3px solid var(--cold); }
+  .pipeline-card.total { border-top: 3px solid var(--text-tertiary); }
+
+  .pipeline-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-hot { background: var(--hot); }
+  .dot-warm { background: var(--warm); }
+  .dot-cold { background: var(--cold); }
+
+  /* MONTHLY BARS */
+  .bar-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .bar-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .bar-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .bar-name {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+
+  .bar-vals {
+    font-size: 11px;
+    color: var(--text-tertiary);
+  }
+
+  .bar-vals strong {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    color: var(--text-primary);
+    font-weight: normal;
+  }
+
+  .bar-track {
+    height: 8px;
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+
+  /* NOTES AREA */
+  .notes-area {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .notes-content {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    min-height: 60px;
+  }
+
+  /* INPUT FIELDS */
+  .field-input {
+    display: none;
+    width: 100%;
+    background: var(--bg-secondary);
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    padding: 6px 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-top: 4px;
+    transition: border-color 0.15s;
+  }
+
+  .field-input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+  }
+
+  body.edit-mode .field-input {
+    display: block;
+  }
+
+  body.edit-mode .field-display {
+    display: none;
+  }
+
+  .field-display { display: block; }
+
+  textarea.field-input {
+    min-height: 80px;
+    resize: vertical;
+  }
+
+  /* EDIT MODE CARD HIGHLIGHT */
+  body.edit-mode .card,
+  body.edit-mode .pipeline-card,
+  body.edit-mode .notes-area {
+    border-color: rgba(239, 159, 39, 0.3);
+  }
+
+  /* WIN RATE */
+  .win-rate-value {
+    font-family: Georgia, serif;
+    font-size: 26px;
+  }
+
+  /* LAYOUT HELPERS */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+
+  .spacer-sm { margin-bottom: 12px; }
+  .spacer-md { margin-bottom: 20px; }
+
+  /* SEPARATOR */
+  hr.section-sep {
+    border: none;
+    border-top: 0.5px solid var(--border);
+    margin: 28px 0;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 24px 32px;
+    font-size: 10px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-top: 0.5px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <h1>Santtoro — Team Performance Dashboard</h1>
+    <div class="subtitle">Updated weekly by Beatriz &nbsp;·&nbsp; SoWa District, Boston</div>
+  </div>
+  <div class="header-meta">
+    <div class="week-badge" id="weekBadge">Week — / — — — —</div>
+    <button class="edit-btn" id="editToggleBtn" onclick="toggleEditMode()">Edit Mode</button>
+  </div>
+</div>
+
+<!-- EDIT MODE ACTIONS BAR -->
+<div class="edit-actions">
+  <span class="edit-notice">Edit mode active — make changes below, then save</span>
+  <button class="btn-cancel" onclick="cancelEdit()">Cancel</button>
+  <button class="btn-save" onclick="saveAll()">Save Changes</button>
+</div>
+
+<div class="main">
+
+  <!-- ============================================================
+       SECTION 1: BUSINESS OVERVIEW
+  ============================================================ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">Business Overview</span>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="cards-grid">
+
+      <!-- YTD Revenue -->
+      <div class="card">
+        <div class="card-label">YTD Revenue Closed</div>
+        <div class="card-value field-display" id="disp_ytd_revenue">$0</div>
+        <input class="field-input" type="number" id="inp_ytd_revenue" placeholder="371000">
+        <div class="card-sub field-display" id="sub_ytd_revenue">of $3,180,000 target</div>
+        <div class="progress-track">
+          <div class="progress-fill blue" id="bar_ytd_revenue" style="width:0%"></div>
+        </div>
+        <span class="badge" id="badge_ytd_revenue">—</span>
+      </div>
+
+      <!-- Current Month Revenue -->
+      <div class="card">
+        <div class="card-label">Current Month Revenue</div>
+        <div class="card-value field-display" id="disp_month_revenue">$0</div>
+        <input class="field-input" type="number" id="inp_month_revenue" placeholder="0">
+        <div class="card-sub field-display" id="sub_month_revenue">of $333,333 monthly target</div>
+        <div class="progress-track">
+          <div class="progress-fill blue" id="bar_month_revenue" style="width:0%"></div>
+        </div>
+        <span class="badge" id="badge_month_revenue">—</span>
+      </div>
+
+      <!-- Total Pipeline -->
+      <div class="card">
+        <div class="card-label">Total Active Pipeline</div>
+        <div class="card-value field-display" id="disp_total_pipeline">$0</div>
+        <input class="field-input" type="number" id="inp_total_pipeline" placeholder="1570750">
+        <div class="card-sub">gross pipeline value</div>
+      </div>
+
+      <!-- Avg Deal Size -->
+      <div class="card">
+        <div class="card-label">Average Deal Size</div>
+        <div class="card-value field-display" id="disp_avg_deal">$0</div>
+        <input class="field-input" type="number" id="inp_avg_deal" placeholder="61800">
+        <div class="card-sub field-display" id="sub_avg_deal">vs $100,000 goal</div>
+        <div class="progress-track">
+          <div class="progress-fill blue" id="bar_avg_deal" style="width:0%"></div>
+        </div>
+        <span class="badge" id="badge_avg_deal">—</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SECTION 2: JULIANA
+  ============================================================ -->
+  <div class="section section-juliana">
+    <div class="section-header">
+      <span class="section-label">Juliana — Sales Manager</span>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="person-card">
+      <div class="person-header person-header-juliana">
+        <div class="person-avatar avatar-juliana">J</div>
+        <div class="person-info">
+          <h2>Juliana</h2>
+          <div class="role">Sales Manager &nbsp;·&nbsp; Builder Channel</div>
+        </div>
+      </div>
+      <div class="person-body">
+
+        <div class="two-col">
+          <!-- LEFT: KPI Table -->
+          <div>
+            <table class="kpi-table">
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Target</th>
+                  <th>Actual</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Builder Outreach Calls</td>
+                  <td class="val-target">25 / mo</td>
+                  <td>
+                    <span class="field-display val-actual" id="disp_j_calls">0</span>
+                    <input class="field-input" type="number" id="inp_j_calls" placeholder="0">
+                  </td>
+                  <td><span class="badge" id="badge_j_calls">—</span></td>
+                </tr>
+                <tr>
+                  <td>Showroom Meetings Held</td>
+                  <td class="val-target">8 / mo</td>
+                  <td>
+                    <span class="field-display val-actual" id="disp_j_showroom">0</span>
+                    <input class="field-input" type="number" id="inp_j_showroom" placeholder="0">
+                  </td>
+                  <td><span class="badge" id="badge_j_showroom">—</span></td>
+                </tr>
+                <tr>
+                  <td>Proposals Sent</td>
+                  <td class="val-target">6 / mo</td>
+                  <td>
+                    <span class="field-display val-actual" id="disp_j_proposals">0</span>
+                    <input class="field-input" type="number" id="inp_j_proposals" placeholder="0">
+                  </td>
+                  <td><span class="badge" id="badge_j_proposals">—</span></td>
+                </tr>
+                <tr>
+                  <td>Contracts Signed</td>
+                  <td class="val-target">3–4 / mo</td>
+                  <td>
+                    <span class="field-display val-actual" id="disp_j_contracts">0</span>
+                    <input class="field-input" type="number" id="inp_j_contracts" placeholder="0">
+                  </td>
+                  <td><span class="badge" id="badge_j_contracts">—</span></td>
+                </tr>
+                <tr>
+                  <td>Revenue Closed (Month)</td>
+                  <td class="val-target">$100K+</td>
+                  <td>
+                    <span class="field-display val-actual" id="disp_j_revenue">$0</span>
+                    <input class="field-input" type="number" id="inp_j_revenue" placeholder="0">
+                  </td>
+                  <td><span class="badge" id="badge_j_revenue">—</span></td>
+                </tr>
+                <tr>
+                  <td>Pipeline Added (Month)</td>
+                  <td class="val-target">$200K+</td>
+                  <td>
+                    <span class="field-display val-actual" id="disp_j_pipeline_added">$0</span>
+                    <input class="field-input" type="number" id="inp_j_pipeline_added" placeholder="0">
+                  </td>
+                  <td><span class="badge" id="badge_j_pipeline_added">—</span></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="spacer-sm"></div>
+            <div style="font-size:10px;font-weight:bold;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:6px;">Notes</div>
+            <div class="field-display notes-content" id="disp_j_notes" style="font-size:12px;min-height:40px;"></div>
+            <textarea class="field-input" id="inp_j_notes" placeholder="Juliana's weekly notes, blockers, highlights..."></textarea>
+          </div>
+
+          <!-- RIGHT: Metric Cards -->
+          <div style="display:flex;flex-direction:column;gap:12px;">
+
+            <!-- Win Rate -->
+            <div class="card" style="border-top: 3px solid var(--juliana);">
+              <div class="card-label">Win Rate</div>
+              <div class="card-value field-display" id="disp_j_winrate">—%</div>
+              <div class="card-sub">contracts signed / proposals sent</div>
+              <div class="progress-track">
+                <div class="progress-fill blue" id="bar_j_winrate" style="width:0%"></div>
+              </div>
+            </div>
+
+            <!-- Juliana mini metric grid -->
+            <div class="cards-grid-3" style="gap:8px;">
+              <div class="card" style="padding:12px 14px;">
+                <div class="card-label" style="font-size:9px;">Calls</div>
+                <div class="card-value small field-display" id="disp2_j_calls">0</div>
+                <div style="font-size:9px;color:var(--text-tertiary);">of 25</div>
+                <div class="progress-track" style="margin-top:6px;">
+                  <div class="progress-fill blue" id="mini_bar_j_calls" style="width:0%"></div>
+                </div>
+              </div>
+              <div class="card" style="padding:12px 14px;">
+                <div class="card-label" style="font-size:9px;">Meetings</div>
+                <div class="card-value small field-display" id="disp2_j_showroom">0</div>
+                <div style="font-size:9px;color:var(--text-tertiary);">of 8</div>
+                <div class="progress-track" style="margin-top:6px;">
+                  <div class="progress-fill blue" id="mini_bar_j_showroom" style="width:0%"></div>
+                </div>
+              </div>
+              <div class="card" style="padding:12px 14px;">
+                <div class="card-label" style="font-size:9px;">Contracts</div>
+                <div class="card-value small field-display" id="disp2_j_contracts">0</div>
+                <div style="font-size:9px;color:var(--text-tertiary);">of 3–4</div>
+                <div class="progress-track" style="margin-top:6px;">
+                  <div class="progress-fill blue" id="mini_bar_j_contracts" style="width:0%"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SECTION 3: LOURDES
+  ============================================================ -->
+  <div class="section section-lourdes">
+    <div class="section-header">
+      <span class="section-label">Lourdes — Business Developer</span>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="person-card">
+      <div class="person-header person-header-lourdes">
+        <div class="person-avatar avatar-lourdes">L</div>
+        <div class="person-info">
+          <h2>Lourdes</h2>
+          <div class="role">Business Developer &nbsp;·&nbsp; Architect &amp; Designer Network</div>
+        </div>
+      </div>
+      <div class="person-body">
+
+        <div class="two-col">
+          <!-- LEFT: KPI Table -->
+          <div>
+            <table class="kpi-table">
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Target</th>
+                  <th>Actual</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>A&amp;D Firms Visited</td>
+                  <td class="val-target">6 / mo</td>
+                  <td>
+                    <span class="field-display val-actual" id="disp_l_firms">0</span>
+                    <input class="field-input" type="number" id="inp_l_firms" placeholder="0">
+                  </td>
+                  <td><span class="badge" id="badge_l_firms">—</span></td>
+                </tr>
+                <tr>
+                  <td>Follow-up Meetings Sched.</td>
+                  <td class="val-target">—</td>
+                  <td>
+                    <span class="field-display val-actual" id="disp_l_followups">0</span>
+                    <input class="field-input" type="number" id="inp_l_followups" placeholder="0">
+                  </td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Showroom Visits (A&amp;D)</td>
+                  <td class="val-target">3 / mo</td>
+                  <td>
+                    <span class="field-display val-actual" id="disp_l_showroom">0</span>
+                    <input class="field-input" type="number" id="inp_l_showroom" placeholder="0">
+                  </td>
+                  <td><span class="badge" id="badge_l_showroom">—</span></td>
+                </tr>
+                <tr>
+                  <td>Active Specs in Play</td>
+                  <td class="val-target">—</td>
+                  <td>
+                    <span class="field-display val-actual" id="disp_l_specs">0</span>
+                    <input class="field-input" type="number" id="inp_l_specs" placeholder="0">
+                  </td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>A&amp;D Revenue (Month)</td>
+                  <td class="val-target">—</td>
+                  <td>
+                    <span class="field-display val-actual" id="disp_l_revenue">$0</span>
+                    <input class="field-input" type="number" id="inp_l_revenue" placeholder="0">
+                  </td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>New Firms Added</td>
+                  <td class="val-target">—</td>
+                  <td>
+                    <span class="field-display val-actual" id="disp_l_new_firms">0</span>
+                    <input class="field-input" type="number" id="inp_l_new_firms" placeholder="0">
+                  </td>
+                  <td>—</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="spacer-sm"></div>
+            <div style="font-size:10px;font-weight:bold;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:6px;">Notes</div>
+            <div class="field-display notes-content" id="disp_l_notes" style="font-size:12px;min-height:40px;"></div>
+            <textarea class="field-input" id="inp_l_notes" placeholder="Lourdes' weekly notes, active relationships, opportunities..."></textarea>
+          </div>
+
+          <!-- RIGHT: Metric Cards -->
+          <div style="display:flex;flex-direction:column;gap:12px;">
+
+            <div class="cards-grid-2" style="gap:8px;">
+              <div class="card" style="border-top: 3px solid var(--lourdes);">
+                <div class="card-label" style="font-size:9px;">Firms Visited</div>
+                <div class="card-value small field-display" id="disp2_l_firms">0</div>
+                <div style="font-size:9px;color:var(--text-tertiary);">of 6 / month</div>
+                <div class="progress-track" style="margin-top:6px;">
+                  <div class="progress-fill blue" id="mini_bar_l_firms" style="width:0%"></div>
+                </div>
+              </div>
+              <div class="card" style="border-top: 3px solid var(--lourdes);">
+                <div class="card-label" style="font-size:9px;">Showroom Visits</div>
+                <div class="card-value small field-display" id="disp2_l_showroom">0</div>
+                <div style="font-size:9px;color:var(--text-tertiary);">of 3 / month</div>
+                <div class="progress-track" style="margin-top:6px;">
+                  <div class="progress-fill blue" id="mini_bar_l_showroom" style="width:0%"></div>
+                </div>
+              </div>
+              <div class="card" style="padding:12px 14px;">
+                <div class="card-label" style="font-size:9px;">Follow-ups</div>
+                <div class="card-value small field-display" id="disp2_l_followups">0</div>
+                <div style="font-size:9px;color:var(--text-tertiary);">scheduled</div>
+              </div>
+              <div class="card" style="padding:12px 14px;">
+                <div class="card-label" style="font-size:9px;">Active Specs</div>
+                <div class="card-value small field-display" id="disp2_l_specs">0</div>
+                <div style="font-size:9px;color:var(--text-tertiary);">in play</div>
+              </div>
+            </div>
+
+            <div class="card" style="border-top: 3px solid var(--lourdes);">
+              <div class="card-label">A&amp;D Revenue Contribution</div>
+              <div class="card-value field-display" id="disp2_l_revenue">$0</div>
+              <div class="card-sub">from architect &amp; designer referred deals this month</div>
+            </div>
+
+            <div class="card" style="padding:12px 14px;">
+              <div class="card-label" style="font-size:9px;">New Firms Added to Pipeline</div>
+              <div class="card-value small field-display" id="disp2_l_new_firms">0</div>
+              <div style="font-size:9px;color:var(--text-tertiary);">this month</div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SECTION 4: PIPELINE SNAPSHOT
+  ============================================================ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">Pipeline Snapshot</span>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="pipeline-row">
+
+      <!-- HOT -->
+      <div class="pipeline-card hot">
+        <div class="pipeline-label">
+          <div class="dot dot-hot"></div>
+          <span class="card-label" style="margin-bottom:0;">HOT &nbsp;·&nbsp; 90% weighted</span>
+        </div>
+        <div class="card-value field-display" id="disp_hot">$0</div>
+        <input class="field-input" type="number" id="inp_hot" placeholder="528000">
+        <div class="card-sub field-display" id="disp_hot_weighted">Weighted: $0</div>
+      </div>
+
+      <!-- WARM -->
+      <div class="pipeline-card warm">
+        <div class="pipeline-label">
+          <div class="dot dot-warm"></div>
+          <span class="card-label" style="margin-bottom:0;">WARM &nbsp;·&nbsp; 50% weighted</span>
+        </div>
+        <div class="card-value field-display" id="disp_warm">$0</div>
+        <input class="field-input" type="number" id="inp_warm" placeholder="620000">
+        <div class="card-sub field-display" id="disp_warm_weighted">Weighted: $0</div>
+      </div>
+
+      <!-- COLD -->
+      <div class="pipeline-card cold">
+        <div class="pipeline-label">
+          <div class="dot dot-cold"></div>
+          <span class="card-label" style="margin-bottom:0;">COLD &nbsp;·&nbsp; 7.5% weighted</span>
+        </div>
+        <div class="card-value field-display" id="disp_cold">$0</div>
+        <input class="field-input" type="number" id="inp_cold" placeholder="422750">
+        <div class="card-sub field-display" id="disp_cold_weighted">Weighted: $0</div>
+      </div>
+
+      <!-- TOTAL WEIGHTED -->
+      <div class="pipeline-card total">
+        <div class="card-label">Total Weighted Pipeline</div>
+        <div class="card-value" id="disp_weighted_total">$0</div>
+        <div class="card-sub" id="disp_remaining_target">Remaining target: —</div>
+        <div class="progress-track">
+          <div class="progress-fill blue" id="bar_pipeline_vs_target" style="width:0%"></div>
+        </div>
+        <span class="badge" id="badge_pipeline">—</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SECTION 5: MONTHLY TARGETS VS ACTUALS
+  ============================================================ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">Monthly Targets vs Actuals</span>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="card">
+      <div class="bar-group">
+
+        <!-- Revenue -->
+        <div class="bar-item">
+          <div class="bar-meta">
+            <span class="bar-name">Revenue</span>
+            <span class="bar-vals"><strong id="bar_rev_actual_label">$0</strong> &nbsp;of&nbsp; $333,333</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" id="bar_rev_fill" style="width:0%;background:var(--accent-blue);"></div>
+          </div>
+        </div>
+
+        <!-- Contracts (Juliana) -->
+        <div class="bar-item">
+          <div class="bar-meta">
+            <span class="bar-name">Contracts Signed</span>
+            <span class="bar-vals"><strong id="bar_contracts_label">0</strong> &nbsp;of&nbsp; 3–4</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" id="bar_contracts_fill" style="width:0%;background:var(--juliana);"></div>
+          </div>
+        </div>
+
+        <!-- Outreach Calls -->
+        <div class="bar-item">
+          <div class="bar-meta">
+            <span class="bar-name">Builder Outreach Calls</span>
+            <span class="bar-vals"><strong id="bar_calls_label">0</strong> &nbsp;of&nbsp; 25</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" id="bar_calls_fill" style="width:0%;background:var(--juliana);"></div>
+          </div>
+        </div>
+
+        <!-- A&D Firms -->
+        <div class="bar-item">
+          <div class="bar-meta">
+            <span class="bar-name">A&amp;D Firms Visited</span>
+            <span class="bar-vals"><strong id="bar_firms_label">0</strong> &nbsp;of&nbsp; 6</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" id="bar_firms_fill" style="width:0%;background:var(--lourdes);"></div>
+          </div>
+        </div>
+
+        <!-- Showroom Visits A&D -->
+        <div class="bar-item">
+          <div class="bar-meta">
+            <span class="bar-name">Showroom Visits (A&amp;D)</span>
+            <span class="bar-vals"><strong id="bar_lshowroom_label">0</strong> &nbsp;of&nbsp; 3</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" id="bar_lshowroom_fill" style="width:0%;background:var(--lourdes);"></div>
+          </div>
+        </div>
+
+        <!-- Proposals -->
+        <div class="bar-item">
+          <div class="bar-meta">
+            <span class="bar-name">Proposals Sent</span>
+            <span class="bar-vals"><strong id="bar_proposals_label">0</strong> &nbsp;of&nbsp; 6</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" id="bar_proposals_fill" style="width:0%;background:var(--juliana);"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SECTION 6: TEAM NOTES / WEEKLY PRIORITIES
+  ============================================================ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">Team Notes &amp; Weekly Priorities</span>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="notes-area">
+      <div style="font-size:10px;font-weight:bold;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:10px;">Beatriz — Weekly Update</div>
+      <div class="field-display notes-content" id="disp_team_notes"></div>
+      <textarea class="field-input" id="inp_team_notes" style="min-height:120px;" placeholder="Weekly priorities, blockers, leadership notes, key actions...&#10;&#10;Example:&#10;— Juliana following up with 3 warm builder leads from last week's expo&#10;— Lourdes presenting showroom to Elkus Manfredi on Thursday&#10;— Q2 contract target: need 2 more closings by end of month"></textarea>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<div class="footer">
+  Santtoro Luxury Cabinetry &nbsp;·&nbsp; SoWa District, Boston &nbsp;·&nbsp; 2026 Revenue Target: $3,180,000
+</div>
+
+<script>
+// ============================================================
+//  DATA DEFAULTS
+// ============================================================
+const DEFAULTS = {
+  ytd_revenue: 371000,
+  month_revenue: 0,
+  total_pipeline: 1570750,
+  avg_deal: 61800,
+  j_calls: 0,
+  j_showroom: 0,
+  j_proposals: 0,
+  j_contracts: 0,
+  j_revenue: 0,
+  j_pipeline_added: 0,
+  j_notes: '',
+  l_firms: 0,
+  l_followups: 0,
+  l_showroom: 0,
+  l_specs: 0,
+  l_revenue: 0,
+  l_new_firms: 0,
+  l_notes: '',
+  hot: 528000,
+  warm: 620000,
+  cold: 422750,
+  team_notes: ''
+};
+
+const STORAGE_KEY = 'santtoro_kpi_v1';
+let data = {};
+let editMode = false;
+
+// ============================================================
+//  HELPERS
+// ============================================================
+function fmt$(n) {
+  if (n === null || n === undefined || isNaN(n)) return '$0';
+  return '$' + Number(n).toLocaleString('en-US', { maximumFractionDigits: 0 });
+}
+
+function fmtN(n) {
+  return Number(n || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
+}
+
+function pct(val, target) {
+  if (!target) return 0;
+  return Math.min(100, Math.round((val / target) * 100));
+}
+
+function progressColor(p) {
+  if (p >= 80) return 'green';
+  if (p >= 50) return 'amber';
+  return 'red';
+}
+
+function badgeFromPct(p, labels) {
+  // labels: [on-track, at-risk, behind]
+  labels = labels || ['On Track', 'At Risk', 'Behind'];
+  if (p >= 80) return { text: labels[0], cls: 'badge-green' };
+  if (p >= 50) return { text: labels[1], cls: 'badge-amber' };
+  return { text: labels[2], cls: 'badge-red' };
+}
+
+function setBar(id, pctVal, colorOverride) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const col = colorOverride || progressColor(pctVal);
+  el.style.width = Math.min(100, pctVal) + '%';
+  el.className = 'progress-fill ' + col;
+}
+
+function setBarRaw(id, pctVal, colorClass) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.width = Math.min(100, pctVal) + '%';
+  el.className = 'bar-fill';
+  el.style.background = '';
+  // color via inline
+}
+
+function setBadge(id, pctVal, labelsOverride) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const b = badgeFromPct(pctVal, labelsOverride);
+  el.textContent = b.text;
+  el.className = 'badge ' + b.cls;
+}
+
+function getWeekRange() {
+  const now = new Date();
+  const day = now.getDay(); // 0=Sun
+  const diffToMon = (day === 0) ? -6 : 1 - day;
+  const mon = new Date(now);
+  mon.setDate(now.getDate() + diffToMon);
+  const fri = new Date(mon);
+  fri.setDate(mon.getDate() + 4);
+
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const wn = getWeekNumber(now);
+
+  const monStr = months[mon.getMonth()] + ' ' + mon.getDate();
+  const friStr = months[fri.getMonth()] + ' ' + fri.getDate();
+  return `Week ${wn}  ·  ${monStr} – ${friStr}, ${fri.getFullYear()}`;
+}
+
+function getWeekNumber(d) {
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+  return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+}
+
+// ============================================================
+//  LOAD / SAVE
+// ============================================================
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      data = Object.assign({}, DEFAULTS, JSON.parse(raw));
+    } else {
+      data = Object.assign({}, DEFAULTS);
+    }
+  } catch(e) {
+    data = Object.assign({}, DEFAULTS);
+  }
+}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+// ============================================================
+//  POPULATE INPUTS FROM DATA
+// ============================================================
+function populateInputs() {
+  Object.keys(data).forEach(key => {
+    const el = document.getElementById('inp_' + key);
+    if (el) el.value = data[key];
+  });
+}
+
+// ============================================================
+//  READ INPUTS INTO TEMP OBJECT
+// ============================================================
+function readInputs() {
+  const tmp = {};
+  Object.keys(data).forEach(key => {
+    const el = document.getElementById('inp_' + key);
+    if (!el) return;
+    if (el.type === 'number') {
+      tmp[key] = parseFloat(el.value) || 0;
+    } else {
+      tmp[key] = el.value;
+    }
+  });
+  return tmp;
+}
+
+// ============================================================
+//  RENDER ALL DISPLAYS
+// ============================================================
+function render() {
+  const d = data;
+
+  // --- Week header ---
+  document.getElementById('weekBadge').textContent = getWeekRange();
+
+  // ---- BUSINESS OVERVIEW ----
+  const YTD_TARGET = 3180000;
+  const MONTH_TARGET = 333333;
+  const DEAL_TARGET = 100000;
+
+  document.getElementById('disp_ytd_revenue').textContent = fmt$(d.ytd_revenue);
+  document.getElementById('sub_ytd_revenue').textContent = 'of ' + fmt$(YTD_TARGET) + ' target (' + pct(d.ytd_revenue, YTD_TARGET) + '%)';
+  const ytdPct = pct(d.ytd_revenue, YTD_TARGET);
+  setBar('bar_ytd_revenue', ytdPct, progressColor(ytdPct));
+  setBadge('badge_ytd_revenue', ytdPct);
+
+  document.getElementById('disp_month_revenue').textContent = fmt$(d.month_revenue);
+  const monthPct = pct(d.month_revenue, MONTH_TARGET);
+  document.getElementById('sub_month_revenue').textContent = 'of ' + fmt$(MONTH_TARGET) + ' target (' + monthPct + '%)';
+  setBar('bar_month_revenue', monthPct, progressColor(monthPct));
+  setBadge('badge_month_revenue', monthPct);
+
+  document.getElementById('disp_total_pipeline').textContent = fmt$(d.total_pipeline);
+
+  document.getElementById('disp_avg_deal').textContent = fmt$(d.avg_deal);
+  const dealPct = pct(d.avg_deal, DEAL_TARGET);
+  document.getElementById('sub_avg_deal').textContent = 'vs ' + fmt$(DEAL_TARGET) + ' goal (' + dealPct + '%)';
+  setBar('bar_avg_deal', dealPct, progressColor(dealPct));
+  setBadge('badge_avg_deal', dealPct, ['On Goal', 'Near Goal', 'Below Goal']);
+
+  // ---- JULIANA ----
+  setV('disp_j_calls', d.j_calls);
+  setV('disp2_j_calls', d.j_calls);
+  setV('disp_j_showroom', d.j_showroom);
+  setV('disp2_j_showroom', d.j_showroom);
+  setV('disp_j_proposals', d.j_proposals);
+  setV('disp_j_contracts', d.j_contracts);
+  setV('disp2_j_contracts', d.j_contracts);
+  setV('disp_j_revenue', fmt$(d.j_revenue));
+  setV('disp_j_pipeline_added', fmt$(d.j_pipeline_added));
+  setV('disp_j_notes', d.j_notes || '—');
+
+  const jCallsPct = pct(d.j_calls, 25);
+  const jShowPct = pct(d.j_showroom, 8);
+  const jPropsPct = pct(d.j_proposals, 6);
+  const jContrPct = pct(d.j_contracts, 3.5);
+  const jRevPct = pct(d.j_revenue, 100000);
+  const jPipePct = pct(d.j_pipeline_added, 200000);
+
+  setBadge('badge_j_calls', jCallsPct);
+  setBadge('badge_j_showroom', jShowPct);
+  setBadge('badge_j_proposals', jPropsPct);
+  setBadge('badge_j_contracts', jContrPct);
+  setBadge('badge_j_revenue', jRevPct, ['On Track', 'At Risk', 'Behind']);
+  setBadge('badge_j_pipeline_added', jPipePct, ['On Track', 'At Risk', 'Behind']);
+
+  setBar('mini_bar_j_calls', jCallsPct, progressColor(jCallsPct));
+  setBar('mini_bar_j_showroom', jShowPct, progressColor(jShowPct));
+  setBar('mini_bar_j_contracts', jContrPct, progressColor(jContrPct));
+
+  // Win rate
+  let winRate = 0;
+  if (d.j_proposals > 0) {
+    winRate = Math.round((d.j_contracts / d.j_proposals) * 100);
+  }
+  setV('disp_j_winrate', winRate + '%');
+  setBar('bar_j_winrate', winRate, progressColor(winRate));
+
+  // ---- LOURDES ----
+  setV('disp_l_firms', d.l_firms);
+  setV('disp2_l_firms', d.l_firms);
+  setV('disp_l_followups', d.l_followups);
+  setV('disp2_l_followups', d.l_followups);
+  setV('disp_l_showroom', d.l_showroom);
+  setV('disp2_l_showroom', d.l_showroom);
+  setV('disp_l_specs', d.l_specs);
+  setV('disp2_l_specs', d.l_specs);
+  setV('disp_l_revenue', fmt$(d.l_revenue));
+  setV('disp2_l_revenue', fmt$(d.l_revenue));
+  setV('disp_l_new_firms', d.l_new_firms);
+  setV('disp2_l_new_firms', d.l_new_firms);
+  setV('disp_l_notes', d.l_notes || '—');
+
+  const lFirmsPct = pct(d.l_firms, 6);
+  const lShowPct = pct(d.l_showroom, 3);
+  setBadge('badge_l_firms', lFirmsPct);
+  setBadge('badge_l_showroom', lShowPct);
+
+  setBar('mini_bar_l_firms', lFirmsPct, progressColor(lFirmsPct));
+  setBar('mini_bar_l_showroom', lShowPct, progressColor(lShowPct));
+
+  // ---- PIPELINE ----
+  const hotW = Math.round(d.hot * 0.90);
+  const warmW = Math.round(d.warm * 0.50);
+  const coldW = Math.round(d.cold * 0.075);
+  const totalW = hotW + warmW + coldW;
+
+  setV('disp_hot', fmt$(d.hot));
+  setV('disp_warm', fmt$(d.warm));
+  setV('disp_cold', fmt$(d.cold));
+  setV('disp_hot_weighted', 'Weighted: ' + fmt$(hotW));
+  setV('disp_warm_weighted', 'Weighted: ' + fmt$(warmW));
+  setV('disp_cold_weighted', 'Weighted: ' + fmt$(coldW));
+  setV('disp_weighted_total', fmt$(totalW));
+
+  const remaining = Math.max(0, YTD_TARGET - d.ytd_revenue);
+  setV('disp_remaining_target', 'Remaining target: ' + fmt$(remaining));
+
+  const pipePct = pct(totalW, remaining);
+  setBar('bar_pipeline_vs_target', pipePct, progressColor(pipePct));
+  setBadge('badge_pipeline', pipePct, ['Covers Target', 'Partial Cover', 'Shortfall']);
+
+  // ---- MONTHLY BARS ----
+  setV('bar_rev_actual_label', fmt$(d.month_revenue));
+  setBarColor('bar_rev_fill', monthPct);
+
+  setV('bar_contracts_label', d.j_contracts);
+  setBarColor('bar_contracts_fill', jContrPct);
+
+  setV('bar_calls_label', d.j_calls);
+  setBarColor('bar_calls_fill', jCallsPct);
+
+  setV('bar_firms_label', d.l_firms);
+  setBarColor('bar_firms_fill', lFirmsPct);
+
+  setV('bar_lshowroom_label', d.l_showroom);
+  setBarColor('bar_lshowroom_fill', lShowPct);
+
+  setV('bar_proposals_label', d.j_proposals);
+  setBarColor('bar_proposals_fill', jPropsPct);
+
+  // ---- TEAM NOTES ----
+  setV('disp_team_notes', d.team_notes || '— No notes this week.');
+}
+
+function setBarColor(id, p) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const colors = { green: '#4CAF50', amber: '#EF9F27', red: '#E24B4A' };
+  el.style.background = colors[progressColor(p)] || colors.red;
+  el.style.width = Math.min(100, p) + '%';
+}
+
+function setV(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+// ============================================================
+//  EDIT MODE
+// ============================================================
+function toggleEditMode() {
+  editMode = !editMode;
+  document.body.classList.toggle('edit-mode', editMode);
+  document.getElementById('editToggleBtn').textContent = editMode ? 'Viewing' : 'Edit Mode';
+  if (editMode) populateInputs();
+}
+
+function saveAll() {
+  const tmp = readInputs();
+  Object.assign(data, tmp);
+  saveData();
+  render();
+  toggleEditMode();
+}
+
+function cancelEdit() {
+  toggleEditMode();
+  // Re-populate inputs from current data (discard changes)
+  populateInputs();
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+  loadData();
+  render();
+  // Auto re-render week badge at midnight
+  setInterval(function() {
+    document.getElementById('weekBadge').textContent = getWeekRange();
+  }, 60000);
+});
+</script>
+</body>
+</html>
